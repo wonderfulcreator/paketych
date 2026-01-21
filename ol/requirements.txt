@@ -1,0 +1,6 @@
+numpy
+pandas
+scikit-learn
+openpyxl
+# Optional (for drag & drop in the GUI):
+# tkinterdnd2

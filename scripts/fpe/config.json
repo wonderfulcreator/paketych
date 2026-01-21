@@ -1,0 +1,14 @@
+{
+  "header_row": 1,
+  "tweak_mode": "row_index",
+  "columns": {
+    "Лист1": [
+      "Номер по данным поставщика",
+      "Номер контейнера",
+      "Фрахтовый агент"
+    ]
+  },
+  "engine": "ff1-cloudproof-fpe-alnum",
+  "short_policy": "leave",
+  "force_string": true
+}
