@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
+  <rect width="900" height="900" fill="#f7f4ee"/>
+  <path d="M450 180c-90 0-150 60-150 140 0 70 60 120 150 120s150-50 150-120c0-80-60-140-150-140z" fill="#e8e2d7" stroke="#2a2a2a" stroke-width="8"/>
+  <path d="M360 420l-90 320 180-210 180 210-90-320" fill="#e8e2d7" stroke="#2a2a2a" stroke-width="8"/>
+  <text x="450" y="520" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="54" fill="#2a2a2a" opacity="0.9">ЛЕНТА</text>
+</svg>

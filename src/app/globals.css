@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 255 248 239;
+  --bg-soft: 255 240 222;
+  --paper: 255 252 247;
+  --fg: 93 43 24;
+  --muted: 138 92 66;
+  --line: 238 205 175;
+  --accent: 230 92 27;
+  --accent-strong: 176 42 9;
+  --sun: 255 191 80;
+  --font-display: "Baloo 2", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: rgb(var(--fg));
+  background:
+    radial-gradient(circle at top left, rgba(255, 204, 120, 0.28), transparent 26%),
+    radial-gradient(circle at top right, rgba(229, 92, 33, 0.16), transparent 28%),
+    linear-gradient(180deg, rgb(var(--bg-soft)) 0%, rgb(var(--bg)) 20%, rgb(var(--bg)) 100%);
+  background-color: rgb(var(--bg));
+  min-height: 100vh;
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(rgba(181, 110, 42, 0.1) 1px, transparent 1.1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 62%);
+}
+
+::selection {
+  background: rgba(255, 190, 97, 0.55);
+}
+
+@layer components {
+  .container {
+    @apply mx-auto w-full max-w-[1240px] px-4 sm:px-6;
+  }
+
+  .paper-card {
+    @apply rounded-brand border border-line/80 bg-paper/95 shadow-card;
+  }
+
+  .paper-card-soft {
+    @apply rounded-brand border border-line/70 bg-cream/80;
+  }
+
+  .paper-chip {
+    @apply inline-flex items-center rounded-full border border-line bg-cream px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-flameDeep;
+  }
+
+  .brand-heading {
+    @apply font-display font-extrabold text-ink;
+  }
+
+  .brand-link {
+    @apply font-semibold text-flame underline-offset-4 transition hover:text-flameDeep hover:underline;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-flameDeep bg-gradient-to-b from-[#f57822] to-[#e3531d] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(198,81,25,0.22)] transition hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-line bg-cream px-5 py-2.5 text-sm font-semibold text-flameDeep transition hover:bg-creamSoft;
+  }
+
+  .field {
+    @apply w-full rounded-2xl border border-line bg-paper px-4 py-2.5 text-sm text-ink outline-none transition placeholder:text-inkSoft/60 focus:border-flame focus:ring-2 focus:ring-flame/20;
+  }
+}
+
+.hero-burst {
+  position: relative;
+}
+.hero-burst::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 85% 15%, rgba(255, 191, 80, 0.3), transparent 42%);
+}
