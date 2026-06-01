@@ -7,9 +7,9 @@ export default function SalePage() {
   const products = getAllProducts().filter((p) => p.isSale && p.isAvailable);
   return (
     <div className="container py-8">
-      <span className="paper-chip !text-flameDeep">Распродажа</span>
-      <h1 className="brand-heading mt-3 text-3xl">Распродажа стока</h1>
-      <p className="mt-1 max-w-2xl text-sm text-inkSoft">
+      <span className="chip !text-red-500">Распродажа</span>
+      <h1 className="heading mt-3 text-3xl">Распродажа стока</h1>
+      <p className="mt-1 max-w-2xl text-sm text-gray-500">
         Скидки до 30% на коллекции прошлых сезонов. Успейте пополнить витрину по
         выгодной цене — количество ограничено остатками на складе.
       </p>

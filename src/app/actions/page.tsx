@@ -26,9 +26,9 @@ const actions = [
 export default function ActionsPage() {
   return (
     <div className="container py-8">
-      <span className="paper-chip !text-[#b8860b]">Акции</span>
-      <h1 className="brand-heading mt-3 text-3xl">Акции и спецпредложения</h1>
-      <p className="mt-1 max-w-2xl text-sm text-inkSoft">
+      <span className="chip !text-[#b8860b]">Акции</span>
+      <h1 className="heading mt-3 text-3xl">Акции и спецпредложения</h1>
+      <p className="mt-1 max-w-2xl text-sm text-gray-500">
         Выгодные условия для оптовых закупок. Чтобы воспользоваться акцией,
         оставьте заявку — менеджер учтёт условия в коммерческом предложении.
       </p>
@@ -37,7 +37,7 @@ export default function ActionsPage() {
         {actions.map((a) => (
           <div
             key={a.title}
-            className={`flex flex-col rounded-brand border border-line/40 bg-gradient-to-br ${a.accent} p-6 text-white shadow-card`}
+            className={`flex flex-col rounded-brand border border-gray-200/40 bg-gradient-to-br ${a.accent} p-6 text-white shadow-card`}
           >
             <span className="inline-block w-fit rounded-full bg-white/20 px-3 py-1 text-xs font-bold backdrop-blur">
               {a.until}

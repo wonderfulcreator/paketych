@@ -6,14 +6,14 @@ export const metadata = { title: "О бренде — Пакет Пакетыч"
 export default function AboutPage() {
   return (
     <div className="container py-8">
-      <div className="paper-card overflow-hidden">
+      <div className="card-white overflow-hidden">
         <div className="grid items-center gap-6 p-8 md:grid-cols-2 md:p-12">
           <div>
-            <span className="paper-chip">О бренде</span>
-            <h1 className="brand-heading mt-4 text-4xl leading-tight">
+            <span className="chip">О бренде</span>
+            <h1 className="heading mt-4 text-4xl leading-tight">
               Делаем упаковку, которой хочется дарить
             </h1>
-            <p className="mt-4 text-base leading-7 text-inkSoft">
+            <p className="mt-4 text-base leading-7 text-gray-500">
               Пакет Пакетыч — производитель подарочной упаковки для розничных
               сетей и оптовых закупщиков. Мы соединяем яркий дизайн, качественные
               материалы и удобные условия работы от 1 коробки.
@@ -35,9 +35,9 @@ export default function AboutPage() {
           { t: "Свой дизайн", d: "Собственная студия рисует коллекции под тренды сезона. Новогодние серии «Зимняя сказка» и «Christmas Gold» — пример свежих работ." },
           { t: "Удобный опт", d: "Минимальный заказ от 1 коробки, персональный менеджер, доставка по всей России транспортными компаниями." },
         ].map((v) => (
-          <div key={v.t} className="paper-card p-6">
-            <h3 className="font-display text-lg font-bold text-ink">{v.t}</h3>
-            <p className="mt-2 text-sm leading-6 text-inkSoft">{v.d}</p>
+          <div key={v.t} className="card-white p-6">
+            <h3 className="font-display text-lg font-bold text-gray-900">{v.t}</h3>
+            <p className="mt-2 text-sm leading-6 text-gray-500">{v.d}</p>
           </div>
         ))}
       </div>

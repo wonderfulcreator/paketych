@@ -177,15 +177,15 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
 
   return (
     <div className="container py-8">
-      <h1 className="brand-heading text-3xl">Каталог</h1>
-      <p className="mt-1 text-sm text-inkSoft">
+      <h1 className="heading text-3xl">Каталог</h1>
+      <p className="mt-1 text-sm text-gray-500">
         Найдено: {filtered.length} товаров
       </p>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[240px_1fr]">
         {/* Фильтры — десктоп */}
         <aside className="hidden lg:block">
-          <div className="paper-card-soft sticky top-32 p-4">{Filters}</div>
+          <div className="rounded-2xl border border-gray-100 bg-gray-50 sticky top-32 p-4">{Filters}</div>
         </aside>
 
         <div>
@@ -198,11 +198,11 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
               Фильтры
             </button>
             <div className="ml-auto flex items-center gap-2">
-              <label className="text-xs text-inkSoft">Сортировка:</label>
+              <label className="text-xs text-gray-500">Сортировка:</label>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="rounded-full border border-line bg-paper px-3 py-1.5 text-sm text-ink outline-none"
+                className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-900 outline-none"
               >
                 {SORTS.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -214,7 +214,7 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
           </div>
 
           {shown.length === 0 ? (
-            <div className="paper-card-soft p-10 text-center text-inkSoft">
+            <div className="rounded-2xl border border-gray-100 bg-gray-50 p-10 text-center text-gray-500">
               Ничего не найдено. Попробуйте изменить фильтры или поисковый запрос.
             </div>
           ) : (
@@ -246,12 +246,12 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
             className="absolute inset-0 bg-black/40"
             onClick={() => setMobileFilters(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl border-t border-line bg-paper p-5">
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl border-t border-gray-200 bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-bold">Фильтры</h2>
+              <h2 className="font-display text-lg font-bold text-gray-900">Фильтры</h2>
               <button
                 onClick={() => setMobileFilters(false)}
-                className="rounded-full border border-line px-3 py-1.5 text-sm"
+                className="rounded-full border border-gray-200 px-3 py-1.5 text-sm"
               >
                 Закрыть
               </button>
@@ -279,7 +279,7 @@ function FilterGroup({
 }) {
   return (
     <div>
-      <h3 className="mb-2 text-sm font-bold text-ink">{title}</h3>
+      <h3 className="mb-2 text-sm font-bold text-gray-900">{title}</h3>
       <div className="space-y-1">{children}</div>
     </div>
   );
@@ -297,12 +297,12 @@ function Check({
   return (
     <button
       onClick={onChange}
-      className="flex w-full items-center gap-2 text-left text-sm text-inkSoft transition hover:text-flame"
+      className="flex w-full items-center gap-2 text-left text-sm text-gray-500 transition hover:text-orange-500"
     >
       <span
         className={cn(
           "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded border",
-          checked ? "border-flame bg-flame text-white" : "border-line"
+          checked ? "border-flame bg-flame text-white" : "border-gray-200"
         )}
       >
         {checked && (
@@ -318,7 +318,7 @@ function Check({
 
 export function CatalogClient(props: Props) {
   return (
-    <Suspense fallback={<div className="container py-8 text-inkSoft">Загрузка…</div>}>
+    <Suspense fallback={<div className="container py-8 text-gray-500">Загрузка…</div>}>
       <CatalogInner {...props} />
     </Suspense>
   );

@@ -46,9 +46,9 @@ function RegisterInner() {
 
   return (
     <div className="container flex justify-center py-12">
-      <div className="paper-card w-full max-w-md p-7">
-        <h1 className="brand-heading text-2xl">Регистрация</h1>
-        <p className="mt-1 text-sm text-inkSoft">
+      <div className="card-white w-full max-w-md p-7">
+        <h1 className="heading text-2xl">Регистрация</h1>
+        <p className="mt-1 text-sm text-gray-500">
           Создайте аккаунт, чтобы оформлять заявки и видеть наличие.
         </p>
         <form onSubmit={submit} className="mt-6 space-y-3">
@@ -58,14 +58,14 @@ function RegisterInner() {
           <input className="field" placeholder="Телефон +7…" value={form.phone} onChange={(e) => set("phone", e.target.value)} required />
           <input className="field" type="password" placeholder="Пароль (от 8 символов)" value={form.password} onChange={(e) => set("password", e.target.value)} required />
           <input className="field" type="password" placeholder="Повторите пароль" value={form.confirm} onChange={(e) => set("confirm", e.target.value)} required />
-          <label className="flex items-start gap-2 text-xs text-inkSoft">
+          <label className="flex items-start gap-2 text-xs text-gray-500">
             <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5" />
             Согласен с обработкой персональных данных и политикой конфиденциальности
           </label>
-          {error && <p className="text-sm text-flameDeep">{error}</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
           <button type="submit" className="btn-primary w-full">Зарегистрироваться</button>
         </form>
-        <p className="mt-4 text-center text-sm text-inkSoft">
+        <p className="mt-4 text-center text-sm text-gray-500">
           Уже есть аккаунт?{" "}
           <Link href="/login" className="brand-link">Войти</Link>
         </p>

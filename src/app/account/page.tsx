@@ -37,57 +37,57 @@ export default function AccountPage() {
     } catch {}
   }, []);
 
-  if (!ready || !user) return <div className="container py-12 text-inkSoft">Загрузка…</div>;
+  if (!ready || !user) return <div className="container py-12 text-gray-500">Загрузка…</div>;
 
   return (
     <div className="container py-8">
       <div className="flex items-center justify-between">
-        <h1 className="brand-heading text-3xl">Личный кабинет</h1>
+        <h1 className="heading text-3xl">Личный кабинет</h1>
         <button onClick={() => { logout(); router.push("/"); }} className="btn-ghost !py-2 !text-xs">
           Выйти
         </button>
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
-        <aside className="paper-card h-fit p-5">
-          <div className="text-sm text-inkSoft">Контактное лицо</div>
-          <div className="font-bold text-ink">{user.name}</div>
-          <div className="mt-3 text-sm text-inkSoft">Компания</div>
-          <div className="font-bold text-ink">{user.company}</div>
-          <div className="mt-3 text-sm text-inkSoft">Email</div>
-          <div className="font-semibold text-ink">{user.email}</div>
-          <div className="mt-3 text-sm text-inkSoft">Телефон</div>
-          <div className="font-semibold text-ink">{user.phone}</div>
+        <aside className="card-white h-fit p-5">
+          <div className="text-sm text-gray-500">Контактное лицо</div>
+          <div className="font-bold text-gray-900">{user.name}</div>
+          <div className="mt-3 text-sm text-gray-500">Компания</div>
+          <div className="font-bold text-gray-900">{user.company}</div>
+          <div className="mt-3 text-sm text-gray-500">Email</div>
+          <div className="font-semibold text-gray-900">{user.email}</div>
+          <div className="mt-3 text-sm text-gray-500">Телефон</div>
+          <div className="font-semibold text-gray-900">{user.phone}</div>
           <Link href="/favorites" className="brand-link mt-5 inline-flex text-sm">
             Избранное →
           </Link>
         </aside>
 
         <div>
-          <h2 className="font-display text-xl font-bold text-ink">Мои заявки</h2>
+          <h2 className="font-display text-xl font-bold text-gray-900">Мои заявки</h2>
           {requests.length === 0 ? (
-            <div className="paper-card-soft mt-4 p-8 text-center text-inkSoft">
+            <div className="rounded-2xl border border-gray-100 bg-gray-50 mt-4 p-8 text-center text-gray-500">
               Заявок пока нет.{" "}
               <Link href="/catalog" className="brand-link">Перейти в каталог</Link>
             </div>
           ) : (
             <div className="mt-4 space-y-3">
               {requests.map((r) => (
-                <div key={r.id} className="rounded-brand border border-line/70 bg-paper p-4">
+                <div key={r.id} className="rounded-brand border border-gray-200/70 bg-paper p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <span className="font-bold text-ink">{r.id}</span>
-                      <span className="ml-2 text-xs text-inkSoft">
+                      <span className="font-bold text-gray-900">{r.id}</span>
+                      <span className="ml-2 text-xs text-gray-500">
                         {new Date(r.createdAt).toLocaleDateString("ru-RU")}
                       </span>
                     </div>
-                    <span className="rounded-full bg-creamSoft px-3 py-1 text-xs font-semibold text-flameDeep">
+                    <span className="rounded-full bg-gray-50 px-3 py-1 text-xs font-semibold text-red-500">
                       {STATUS_LABELS[r.status] || r.status}
                     </span>
                   </div>
                   <div className="mt-3 space-y-1 text-sm">
                     {r.items.map((it) => (
-                      <div key={it.sku} className="flex justify-between text-inkSoft">
+                      <div key={it.sku} className="flex justify-between text-gray-500">
                         <span className="line-clamp-1">{it.title}</span>
                         <span className="shrink-0 pl-3">
                           {it.boxes} кор. · от {formatPrice(it.basePrice)}
@@ -96,7 +96,7 @@ export default function AccountPage() {
                     ))}
                   </div>
                   {r.comment && (
-                    <div className="mt-2 rounded-xl bg-cream/70 px-3 py-2 text-xs text-inkSoft">
+                    <div className="mt-2 rounded-xl bg-white/70 px-3 py-2 text-xs text-gray-500">
                       {r.comment}
                     </div>
                   )}

@@ -7,33 +7,33 @@ export default function ContactPage() {
 
   return (
     <div className="container py-8">
-      <h1 className="brand-heading text-3xl">Контакты</h1>
+      <h1 className="heading text-3xl">Контакты</h1>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <div className="paper-card p-6">
-          <h2 className="font-display text-lg font-bold text-ink">Связаться с нами</h2>
+        <div className="card-white p-6">
+          <h2 className="font-display text-lg font-bold text-gray-900">Связаться с нами</h2>
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex justify-between">
-              <span className="text-inkSoft">Телефон</span>
-              <a href="tel:+79000000000" className="font-semibold text-flame">8 (900) 000-00-00</a>
+              <span className="text-gray-500">Телефон</span>
+              <a href="tel:+79000000000" className="font-semibold text-orange-500">8 (900) 000-00-00</a>
             </li>
             <li className="flex justify-between">
-              <span className="text-inkSoft">Email</span>
-              <a href="mailto:hello@paket-paketych.ru" className="font-semibold text-flame">hello@paket-paketych.ru</a>
+              <span className="text-gray-500">Email</span>
+              <a href="mailto:hello@paket-paketych.ru" className="font-semibold text-orange-500">hello@paket-paketych.ru</a>
             </li>
             <li className="flex justify-between">
-              <span className="text-inkSoft">Telegram</span>
-              <span className="font-semibold text-ink">@paketpaketych</span>
+              <span className="text-gray-500">Telegram</span>
+              <span className="font-semibold text-gray-900">@paketpaketych</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-inkSoft">Режим работы</span>
-              <span className="font-semibold text-ink">Пн–Пт, 9:00–18:00</span>
+              <span className="text-gray-500">Режим работы</span>
+              <span className="font-semibold text-gray-900">Пн–Пт, 9:00–18:00</span>
             </li>
           </ul>
         </div>
 
-        <div className="paper-card p-6">
-          <h2 className="font-display text-lg font-bold text-ink">Быстрая форма</h2>
+        <div className="card-white p-6">
+          <h2 className="font-display text-lg font-bold text-gray-900">Быстрая форма</h2>
           {sent ? (
             <p className="mt-4 text-sm text-leaf">
               Спасибо! Мы получили ваше сообщение и скоро ответим.

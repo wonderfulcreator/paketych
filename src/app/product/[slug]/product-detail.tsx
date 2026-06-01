@@ -42,18 +42,18 @@ export function ProductDetail({
 
   return (
     <div className="container py-8">
-      <nav className="mb-5 flex flex-wrap items-center gap-1 text-xs text-inkSoft">
-        <Link href="/" className="hover:text-flame">Главная</Link>
+      <nav className="mb-5 flex flex-wrap items-center gap-1 text-xs text-gray-500">
+        <Link href="/" className="hover:text-orange-500">Главная</Link>
         <span>›</span>
-        <Link href="/catalog" className="hover:text-flame">Каталог</Link>
+        <Link href="/catalog" className="hover:text-orange-500">Каталог</Link>
         <span>›</span>
-        <span className="text-ink">{product.title}</span>
+        <span className="text-gray-900">{product.title}</span>
       </nav>
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Галерея */}
         <div>
-          <div className="relative aspect-square overflow-hidden rounded-brand border border-line/70 bg-creamSoft">
+          <div className="relative aspect-square overflow-hidden rounded-2xl border border-gray-200/70 bg-gray-50">
             <Image
               src={images[active]}
               alt={product.title}
@@ -80,8 +80,8 @@ export function ProductDetail({
                   key={img}
                   onClick={() => setActive(i)}
                   className={cn(
-                    "relative h-20 w-20 overflow-hidden rounded-2xl border bg-creamSoft",
-                    active === i ? "border-flame" : "border-line"
+                    "relative h-20 w-20 overflow-hidden rounded-2xl border bg-gray-50",
+                    active === i ? "border-flame" : "border-gray-200"
                   )}
                 >
                   <Image src={img} alt="" fill className="object-contain p-1.5" />
@@ -94,57 +94,57 @@ export function ProductDetail({
         {/* Информация */}
         <div>
           <div className="flex flex-wrap gap-2">
-            <span className="paper-chip">{product.collection}</span>
+            <span className="chip">{product.collection}</span>
             {product.theme.map((t) => (
-              <span key={t} className="rounded-full border border-line bg-cream px-3 py-1 text-xs text-inkSoft">
+              <span key={t} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-500">
                 {t}
               </span>
             ))}
           </div>
 
-          <h1 className="brand-heading mt-4 text-3xl">{product.title}</h1>
-          <div className="mt-1 flex items-center gap-2 text-sm text-inkSoft">
-            Артикул: <span className="font-semibold text-ink">{product.sku}</span>
+          <h1 className="heading mt-4 text-3xl">{product.title}</h1>
+          <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">
+            Артикул: <span className="font-semibold text-gray-900">{product.sku}</span>
           </div>
 
           <div className="mt-5 flex items-baseline gap-3">
             {product.isSale && product.salePrice ? (
               <>
-                <span className="font-display text-3xl font-extrabold text-flameDeep">
+                <span className="font-display text-3xl font-extrabold text-red-500">
                   от {formatPrice(product.salePrice)}
                 </span>
-                <span className="text-lg text-inkSoft line-through">
+                <span className="text-lg text-gray-500 line-through">
                   {formatPrice(product.basePrice)}
                 </span>
               </>
             ) : (
-              <span className="font-display text-3xl font-extrabold text-ink">
+              <span className="font-display text-3xl font-extrabold text-gray-900">
                 от {formatPrice(product.basePrice)}
               </span>
             )}
-            <span className="text-sm text-inkSoft">за коробку</span>
+            <span className="text-sm text-gray-500">за коробку</span>
           </div>
-          <p className="mt-1 text-xs text-inkSoft">
+          <p className="mt-1 text-xs text-gray-500">
             Точная цена формируется менеджером с учётом объёма заказа
           </p>
 
           {user && (
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-creamSoft px-3 py-1.5 text-sm font-semibold text-leaf">
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-gray-50 px-3 py-1.5 text-sm font-semibold text-leaf">
               <span className="inline-block h-2 w-2 rounded-full bg-leaf" />
               {product.isAvailable ? "Есть на складе" : "Под заказ"}
             </div>
           )}
 
           {/* Действие */}
-          <div className="mt-6 rounded-brand border border-line/70 bg-cream/70 p-4">
+          <div className="mt-6 rounded-2xl border border-gray-200/70 bg-white/70 p-4">
             {user ? (
               <>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-inkSoft">Коробок:</span>
+                  <span className="text-sm text-gray-500">Коробок:</span>
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => setBoxes((b) => Math.max(1, b - 1))}
-                      className="h-9 w-9 rounded-full border border-line bg-paper text-lg font-bold text-flameDeep"
+                      className="h-9 w-9 rounded-full border border-gray-200 bg-paper text-lg font-bold text-red-500"
                     >
                       −
                     </button>
@@ -155,16 +155,16 @@ export function ProductDetail({
                       onChange={(e) =>
                         setBoxes(Math.max(1, parseInt(e.target.value) || 1))
                       }
-                      className="h-9 w-16 rounded-xl border border-line bg-paper text-center text-sm"
+                      className="h-9 w-16 rounded-xl border border-gray-200 bg-paper text-center text-sm"
                     />
                     <button
                       onClick={() => setBoxes((b) => b + 1)}
-                      className="h-9 w-9 rounded-full border border-line bg-paper text-lg font-bold text-flameDeep"
+                      className="h-9 w-9 rounded-full border border-gray-200 bg-paper text-lg font-bold text-red-500"
                     >
                       +
                     </button>
                   </div>
-                  <span className="text-xs text-inkSoft">
+                  <span className="text-xs text-gray-500">
                     = {boxes * product.pcsPerBox} шт.
                   </span>
                 </div>
@@ -176,7 +176,7 @@ export function ProductDetail({
                     onClick={() => toggleFavorite(product.id)}
                     className={cn(
                       "inline-flex h-11 w-11 items-center justify-center rounded-full border-2",
-                      fav ? "border-flame text-flame" : "border-line text-inkSoft"
+                      fav ? "border-flame text-orange-500" : "border-gray-200 text-gray-500"
                     )}
                     aria-label="В избранное"
                   >
@@ -193,7 +193,7 @@ export function ProductDetail({
               </>
             ) : (
               <div className="text-center">
-                <p className="text-sm text-inkSoft">
+                <p className="text-sm text-gray-500">
                   Чтобы оформить заявку и узнать оптовые условия, войдите или
                   зарегистрируйтесь.
                 </p>
@@ -220,8 +220,8 @@ export function ProductDetail({
 
           {/* Характеристики */}
           <div className="mt-6">
-            <h3 className="font-display text-lg font-bold text-ink">Характеристики</h3>
-            <dl className="mt-3 divide-y divide-line/60 rounded-brand border border-line/70 bg-paper">
+            <h3 className="font-display text-lg font-bold text-gray-900">Характеристики</h3>
+            <dl className="mt-3 divide-y divide-line/60 rounded-2xl border border-gray-200/70 bg-paper">
               {[
                 ["Размер", product.dimensions],
                 ["Материал", product.material],
@@ -232,8 +232,8 @@ export function ProductDetail({
                 ["Артикул", product.sku],
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between px-4 py-2.5 text-sm">
-                  <dt className="text-inkSoft">{k}</dt>
-                  <dd className="font-semibold text-ink">{v}</dd>
+                  <dt className="text-gray-500">{k}</dt>
+                  <dd className="font-semibold text-gray-900">{v}</dd>
                 </div>
               ))}
             </dl>
@@ -244,7 +244,7 @@ export function ProductDetail({
       {/* С этим смотрят */}
       {related.length > 0 && (
         <section className="mt-14">
-          <h2 className="brand-heading text-2xl">С этим смотрят</h2>
+          <h2 className="heading text-2xl">С этим смотрят</h2>
           <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
             {related.map((p) => (
               <ProductCard key={p.id} product={p} />

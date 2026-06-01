@@ -1,5 +1,123 @@
 [
   {
+    "id": "p0241",
+    "slug": "ms-nov-001",
+    "title": "Пакет «Мандариновая сказка» — С Новым Годом",
+    "sku": "MS-NOV-001",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Мандариновая сказка",
+    "theme": [
+      "Новый год",
+      "Праздник"
+    ],
+    "size": "M",
+    "material": "Мелованная бумага",
+    "color": "Зелёный",
+    "dimensions": "230×260×100 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 12,
+    "basePrice": 179,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": true,
+    "isSale": false,
+    "images": [
+      "/products/mandarinka/design-mandarinka.webp"
+    ]
+  },
+  {
+    "id": "p0242",
+    "slug": "ms-nov-002",
+    "title": "Пакет «Мандариновая сказка» — Семейный праздник",
+    "sku": "MS-NOV-002",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Мандариновая сказка",
+    "theme": [
+      "Новый год",
+      "Праздник",
+      "Детский"
+    ],
+    "size": "M",
+    "material": "Мелованная бумага",
+    "color": "Красный",
+    "dimensions": "230×260×100 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 12,
+    "basePrice": 179,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": true,
+    "isSale": false,
+    "images": [
+      "/products/mandarinka/design-family.webp"
+    ]
+  },
+  {
+    "id": "p0243",
+    "slug": "ms-nov-003",
+    "title": "Пакет «Мандариновая сказка» L — С Новым Годом",
+    "sku": "MS-NOV-003",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Мандариновая сказка",
+    "theme": [
+      "Новый год",
+      "Праздник"
+    ],
+    "size": "L",
+    "material": "Мелованная бумага",
+    "color": "Зелёный",
+    "dimensions": "280×330×120 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 10,
+    "basePrice": 219,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": false,
+    "isSale": false,
+    "images": [
+      "/products/mandarinka/design-mandarinka.webp"
+    ]
+  },
+  {
+    "id": "p0244",
+    "slug": "ms-nov-004",
+    "title": "Пакет «Мандариновая сказка» L — Семейный праздник",
+    "sku": "MS-NOV-004",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Мандариновая сказка",
+    "theme": [
+      "Новый год",
+      "Праздник",
+      "Детский"
+    ],
+    "size": "L",
+    "material": "Мелованная бумага",
+    "color": "Красный",
+    "dimensions": "280×330×120 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 10,
+    "basePrice": 219,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": false,
+    "isSale": false,
+    "images": [
+      "/products/mandarinka/design-family.webp"
+    ]
+  },
+  {
     "id": "p0001",
     "slug": "b-kraft-001",
     "title": "Подарочный пакет B KRAFT-001",

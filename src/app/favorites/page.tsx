@@ -9,15 +9,15 @@ const allProducts = getAllProducts();
 
 export default function FavoritesPage() {
   const { favorites, ready } = useStore();
-  if (!ready) return <div className="container py-12 text-inkSoft">Загрузка…</div>;
+  if (!ready) return <div className="container py-12 text-gray-500">Загрузка…</div>;
 
   const items = allProducts.filter((p) => favorites.includes(p.id));
 
   return (
     <div className="container py-8">
-      <h1 className="brand-heading text-3xl">Избранное</h1>
+      <h1 className="heading text-3xl">Избранное</h1>
       {items.length === 0 ? (
-        <div className="paper-card-soft mt-6 p-10 text-center text-inkSoft">
+        <div className="rounded-2xl border border-gray-100 bg-gray-50 mt-6 p-10 text-center text-gray-500">
           В избранном пока пусто.{" "}
           <Link href="/catalog" className="brand-link">Выбрать товары</Link>
         </div>

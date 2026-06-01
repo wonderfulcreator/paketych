@@ -24,18 +24,18 @@ function LoginInner() {
 
   return (
     <div className="container flex justify-center py-12">
-      <div className="paper-card w-full max-w-md p-7">
-        <h1 className="brand-heading text-2xl">Вход</h1>
-        <p className="mt-1 text-sm text-inkSoft">
+      <div className="card-white w-full max-w-md p-7">
+        <h1 className="heading text-2xl">Вход</h1>
+        <p className="mt-1 text-sm text-gray-500">
           Войдите, чтобы продолжить оформление заявки.
         </p>
         <form onSubmit={submit} className="mt-6 space-y-3">
           <input className="field" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input className="field" type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          {error && <p className="text-sm text-flameDeep">{error}</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
           <button type="submit" className="btn-primary w-full">Войти</button>
         </form>
-        <p className="mt-4 text-center text-sm text-inkSoft">
+        <p className="mt-4 text-center text-sm text-gray-500">
           Нет аккаунта?{" "}
           <Link href={`/register?redirect=${redirect}`} className="brand-link">
             Зарегистрироваться

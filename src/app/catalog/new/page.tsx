@@ -7,9 +7,9 @@ export default function NewPage() {
   const products = getAllProducts().filter((p) => p.isNew && p.isAvailable);
   return (
     <div className="container py-8">
-      <span className="paper-chip">Новинки</span>
-      <h1 className="brand-heading mt-3 text-3xl">Свежие поступления</h1>
-      <p className="mt-1 max-w-2xl text-sm text-inkSoft">
+      <span className="chip">Новинки</span>
+      <h1 className="heading mt-3 text-3xl">Свежие поступления</h1>
+      <p className="mt-1 max-w-2xl text-sm text-gray-500">
         Новогодние коллекции «Зимняя сказка» и «Christmas Gold» — акварельные
         пейзажи, золотое тиснение и атласные ленты.
       </p>
