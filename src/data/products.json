@@ -1,5 +1,125 @@
 [
   {
+    "id": "p0245",
+    "slug": "sg-nov-001",
+    "title": "Пакет «Снежные грёзы» — Желаю счастья",
+    "sku": "SG-NOV-001",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Снежные грёзы",
+    "theme": [
+      "Новый год",
+      "Праздник",
+      "Романтика"
+    ],
+    "size": "M",
+    "material": "Мелованная бумага",
+    "color": "Пудровый",
+    "dimensions": "230×260×100 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 12,
+    "basePrice": 189,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": true,
+    "isSale": false,
+    "images": [
+      "/products/snezhnie/design-tree.webp"
+    ]
+  },
+  {
+    "id": "p0246",
+    "slug": "sg-nov-002",
+    "title": "Пакет «Снежные грёзы» — Праздничные ромбы",
+    "sku": "SG-NOV-002",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Снежные грёзы",
+    "theme": [
+      "Новый год",
+      "Праздник",
+      "Романтика"
+    ],
+    "size": "M",
+    "material": "Мелованная бумага",
+    "color": "Розово-мятный",
+    "dimensions": "230×260×100 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 12,
+    "basePrice": 189,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": true,
+    "isSale": false,
+    "images": [
+      "/products/snezhnie/design-diamond.webp"
+    ]
+  },
+  {
+    "id": "p0247",
+    "slug": "sg-nov-003",
+    "title": "Пакет «Снежные грёзы» L — Желаю счастья",
+    "sku": "SG-NOV-003",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Снежные грёзы",
+    "theme": [
+      "Новый год",
+      "Праздник",
+      "Романтика"
+    ],
+    "size": "L",
+    "material": "Мелованная бумага",
+    "color": "Пудровый",
+    "dimensions": "280×330×120 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 10,
+    "basePrice": 229,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": false,
+    "isSale": false,
+    "images": [
+      "/products/snezhnie/design-tree.webp"
+    ]
+  },
+  {
+    "id": "p0248",
+    "slug": "sg-nov-004",
+    "title": "Пакет «Снежные грёзы» L — Праздничные ромбы",
+    "sku": "SG-NOV-004",
+    "category": "bags",
+    "categoryLabel": "Подарочные пакеты",
+    "collection": "Снежные грёзы",
+    "theme": [
+      "Новый год",
+      "Праздник",
+      "Романтика"
+    ],
+    "size": "L",
+    "material": "Мелованная бумага",
+    "color": "Розово-мятный",
+    "dimensions": "280×330×120 мм",
+    "grammage": 210,
+    "handleType": "Атласная лента",
+    "pcsPerBox": 10,
+    "basePrice": 229,
+    "salePrice": null,
+    "isAvailable": true,
+    "isNew": true,
+    "isHit": false,
+    "isSale": false,
+    "images": [
+      "/products/snezhnie/design-diamond.webp"
+    ]
+  },
+  {
     "id": "p0241",
     "slug": "ms-nov-001",
     "title": "Пакет «Мандариновая сказка» — С Новым Годом",
