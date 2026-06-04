@@ -174,7 +174,7 @@ export function ProductCard({ product }: { product: Product }) {
                   onClick={handleAdd}
                   className="w-full rounded-xl bg-orange-500 py-2 text-xs font-bold text-white transition hover:bg-orange-600 active:scale-95"
                 >
-                  В заявку
+                  В корзину
                 </motion.button>
               )}
             </AnimatePresence>

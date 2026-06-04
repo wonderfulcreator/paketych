@@ -47,7 +47,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   </motion.span>
                   <span className="text-sm font-semibold text-gray-900 truncate">{t.message}</span>
                 </div>
-                <p className="mt-0.5 text-xs text-gray-400">Добавлено в заявку</p>
+                <p className="mt-0.5 text-xs text-gray-400">Добавлено в корзину</p>
               </div>
             </motion.div>
           ))}

@@ -20,7 +20,7 @@ const STATUS_COLORS: Record<string, string> = {
 // Уровни клиента
 const CLIENT_LEVELS = [
   { min: 0, max: 1,   label: "Новый клиент",     badge: "🌱", color: "bg-gray-100 text-gray-600",   desc: "Добро пожаловать!" },
-  { min: 2, max: 4,   label: "Постоянный",        badge: "⭐", color: "bg-yellow-50 text-yellow-700", desc: "Ещё заявок и вы станете партнёром" },
+  { min: 2, max: 4,   label: "Постоянный",        badge: "⭐", color: "bg-yellow-50 text-yellow-700", desc: "Ещё заказов и вы станете партнёром" },
   { min: 5, max: 9,   label: "Партнёр",           badge: "🏆", color: "bg-orange-50 text-orange-600", desc: "Персональные условия по запросу" },
   { min: 10, max: 999, label: "Ключевой партнёр", badge: "💎", color: "bg-blue-50 text-blue-700",     desc: "Эксклюзивные условия и приоритет" },
 ];
@@ -95,7 +95,7 @@ export default function AccountPage() {
                 <div className="text-xs opacity-75">{level.desc}</div>
               </div>
             </div>
-            <div className="mt-3 text-xs opacity-75">{requests.length} заявок оформлено</div>
+            <div className="mt-3 text-xs opacity-75">{requests.length} заказов оформлено</div>
             {nextLevel && (
               <>
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-black/10">
@@ -105,7 +105,7 @@ export default function AccountPage() {
                     transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }} />
                 </div>
                 <div className="mt-1 text-xs opacity-60">
-                  До уровня «{nextLevel.label}»: ещё {nextLevel.min - requests.length} заявок
+                  До уровня «{nextLevel.label}»: ещё {nextLevel.min - requests.length} заказов
                 </div>
               </>
             )}
@@ -114,7 +114,7 @@ export default function AccountPage() {
 
         {/* Заявки */}
         <div>
-          <h2 className="font-display text-xl font-bold text-gray-900">Мои заявки</h2>
+          <h2 className="font-display text-xl font-bold text-gray-900">Мои заказы</h2>
           {requests.length === 0 ? (
             <div className="mt-4 rounded-2xl border border-gray-100 bg-gray-50 p-8 text-center text-gray-400">
               Заявок пока нет.{" "}

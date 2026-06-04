@@ -76,7 +76,7 @@ export function Header() {
                 Выйти
               </button>
 
-              {/* Корзина заявки с bounce */}
+              {/* Корзина с bounce */}
               <Link href="/cart"
                 className="relative inline-flex items-center gap-1.5 rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-orange-600">
                 <motion.span
@@ -84,7 +84,7 @@ export function Header() {
                   transition={{ duration: 0.5, ease: "easeOut" }}
                   className="inline-flex items-center gap-1.5"
                 >
-                  🛍 Заявка
+                  🛍 Корзина
                 </motion.span>
                 <AnimatePresence>
                   {requestCount > 0 && (
