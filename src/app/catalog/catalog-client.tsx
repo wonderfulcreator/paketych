@@ -205,6 +205,47 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
             </div>
           </div>
 
+          {/* Активные фильтры-чипсы */}
+          {(selSizes.length > 0 || selCols.length > 0 || selThemes.length > 0 || onlySale || onlyNew) && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {onlyNew && (
+                <button onClick={() => { setOnlyNew(false); setVisible(24); }}
+                  className="flex items-center gap-1.5 rounded-full bg-green-50 border border-green-200 px-3 py-1.5 text-xs font-semibold text-green-700 transition hover:bg-green-100">
+                  Новинки <span className="text-green-500">×</span>
+                </button>
+              )}
+              {onlySale && (
+                <button onClick={() => { setOnlySale(false); setVisible(24); }}
+                  className="flex items-center gap-1.5 rounded-full bg-red-50 border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100">
+                  Со скидкой <span className="text-red-400">×</span>
+                </button>
+              )}
+              {selSizes.map(s => (
+                <button key={s} onClick={() => toggle(selSizes, setSelSizes, s)}
+                  className="flex items-center gap-1.5 rounded-full bg-orange-50 border border-orange-200 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100">
+                  Размер {s} <span className="text-orange-400">×</span>
+                </button>
+              ))}
+              {selCols.map(c => (
+                <button key={c} onClick={() => toggle(selCols, setSelCols, c)}
+                  className="flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-3 py-1.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">
+                  {c} <span className="text-blue-400">×</span>
+                </button>
+              ))}
+              {selThemes.map(t => (
+                <button key={t} onClick={() => toggle(selThemes, setSelThemes, t)}
+                  className="flex items-center gap-1.5 rounded-full bg-purple-50 border border-purple-200 px-3 py-1.5 text-xs font-semibold text-purple-700 transition hover:bg-purple-100">
+                  {t} <span className="text-purple-400">×</span>
+                </button>
+              ))}
+              <button onClick={() => { setSelSizes([]); setSelCols([]); setSelThemes([]); setOnlySale(false); setOnlyNew(false); setVisible(24); }}
+                className="flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-500 transition hover:border-orange-300 hover:text-orange-500">
+                Сбросить все
+              </button>
+            </div>
+          )}
+
+
           {filtered.length === 0 ? (
             <div className="rounded-2xl border border-gray-100 bg-gray-50 p-12 text-center text-gray-400">
               Ничего не найдено. Попробуйте изменить фильтры или поисковый запрос.

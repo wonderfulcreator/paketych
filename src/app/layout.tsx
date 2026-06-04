@@ -5,13 +5,15 @@ import { StoreProvider } from "@/providers/StoreProvider";
 import { ToastProvider } from "@/providers/ToastProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { FloatingCart } from "@/components/FloatingCart";
+import { PageProgress } from "@/components/PageProgress";
 
 export const metadata: Metadata = {
   title: "Пакет Пакетыч — подарочная упаковка оптом от производителя",
-  description: "Подарочные пакеты и упаковка оптом от 1 коробки. Новогодняя коллекция, базовый ассортимент, удобный каталог и быстрая заказ менеджеру.",
+  description: "Подарочные пакеты и упаковка оптом от 1 коробки. Авторские коллекции, удобный каталог и быстрая заявка менеджеру.",
   openGraph: {
     title: "Пакет Пакетыч — подарочная упаковка оптом",
-    description: "Подарочные пакеты оптом от 1 коробки. Каталог и заказ онлайн.",
+    description: "Подарочные пакеты оптом от 1 коробки.",
     type: "website",
   },
 };
@@ -28,11 +30,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <StoreProvider>
             <ToastProvider>
+              <PageProgress />
               <div className="relative z-10 flex min-h-screen flex-col">
                 <Header />
                 <main className="flex-1">{children}</main>
                 <Footer />
               </div>
+              <FloatingCart />
             </ToastProvider>
           </StoreProvider>
         </AuthProvider>
