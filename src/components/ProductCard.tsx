@@ -9,6 +9,7 @@ import type { Product } from "@/lib/types";
 import { cn, formatPrice, discountPercent } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import { useStore } from "@/providers/StoreProvider";
+import { useCompare } from "@/providers/CompareProvider";
 import { useToast } from "@/providers/ToastProvider";
 
 /* ── анимация «полёта» в корзину ─────────────────────────────────── */
@@ -30,6 +31,7 @@ export function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
   const { user } = useAuth();
   const { isFavorite, toggleFavorite, addToRequest, request, setBoxes, removeFromRequest } = useStore();
+  const { isComparing, toggleCompare } = useCompare();
   const { showToast } = useToast();
   const [flying, setFlying] = useState(false);
   const fav = isFavorite(product.id);
@@ -103,6 +105,19 @@ export function ProductCard({ product }: { product: Product }) {
             <svg className="h-4 w-4" viewBox="0 0 24 24"
               fill={fav ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
               <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
+            </svg>
+          </button>
+
+          {/* Сравнение */}
+          <button onClick={e => { e.preventDefault(); toggleCompare(product.id); }}
+            className={cn(
+              "absolute right-2 top-12 inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white/95 shadow-sm backdrop-blur transition",
+              isComparing(product.id) ? "border-orange-400 text-orange-500" : "border-gray-200 text-gray-400 hover:text-orange-400"
+            )}
+            aria-label="Сравнить">
+            <svg className="h-4 w-4" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 3v18h18M7 16l4-6 4 4 4-8"/>
             </svg>
           </button>
         </Link>

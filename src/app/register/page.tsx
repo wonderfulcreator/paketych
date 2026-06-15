@@ -17,6 +17,7 @@ function RegisterInner() {
     phone: "",
     password: "",
     confirm: "",
+    website: "", // honeypot — должно остаться пустым
   });
   const [agree, setAgree] = useState(false);
   const [error, setError] = useState("");
@@ -28,6 +29,7 @@ function RegisterInner() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (form.website) return; // honeypot заполнен — это бот, молча игнорируем
     if (!agree) return setError("Подтвердите согласие на обработку данных");
     if (form.password.length < 8)
       return setError("Пароль должен быть не короче 8 символов");
@@ -52,6 +54,17 @@ function RegisterInner() {
           Создайте аккаунт, чтобы оформлять заявки и видеть наличие.
         </p>
         <form onSubmit={submit} className="mt-6 space-y-3">
+          {/* Honeypot — невидимое поле для ботов */}
+          <input
+            type="text"
+            name="website"
+            value={form.website}
+            onChange={(e) => set("website", e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+            aria-hidden="true"
+          />
           <input className="field" placeholder="Имя контактного лица" value={form.name} onChange={(e) => set("name", e.target.value)} required />
           <input className="field" placeholder="Название компании" value={form.company} onChange={(e) => set("company", e.target.value)} required />
           <input className="field" type="email" placeholder="Email" value={form.email} onChange={(e) => set("email", e.target.value)} required />

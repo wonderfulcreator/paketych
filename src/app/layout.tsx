@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { StoreProvider } from "@/providers/StoreProvider";
+import { CompareProvider } from "@/providers/CompareProvider";
 import { ToastProvider } from "@/providers/ToastProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingCart } from "@/components/FloatingCart";
 import { PageProgress } from "@/components/PageProgress";
 import { YandexMetrika } from "@/components/YandexMetrika";
+import { CompareBar } from "@/components/CompareBar";
 
 export const metadata: Metadata = {
   title: "Пакет Пакетыч — подарочная упаковка оптом от производителя",
@@ -31,15 +33,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <YandexMetrika />
         <AuthProvider>
           <StoreProvider>
-            <ToastProvider>
-              <PageProgress />
-              <div className="relative z-10 flex min-h-screen flex-col">
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-              <FloatingCart />
-            </ToastProvider>
+            <CompareProvider>
+              <ToastProvider>
+                <PageProgress />
+                <div className="relative z-10 flex min-h-screen flex-col">
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
+                <FloatingCart />
+                <CompareBar />
+              </ToastProvider>
+            </CompareProvider>
           </StoreProvider>
         </AuthProvider>
       </body>

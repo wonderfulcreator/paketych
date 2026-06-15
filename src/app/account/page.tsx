@@ -30,8 +30,9 @@ function getLevel(count: number) {
 }
 
 type StoredRequest = {
-  id: string; createdAt: string; status: string; comment: string;
-  items: { sku: string; title: string; boxes: number; basePrice: number }[];
+  order_id: string; created_at: string; status: string; comment: string;
+  discount_pct: number; total_base: string; total_final: string;
+  items: { sku: string; title: string; boxes: number; pcs_per_box: number; base_price: string; effective_price: string }[];
 };
 
 export default function AccountPage() {
@@ -128,26 +129,36 @@ export default function AccountPage() {
           ) : (
             <div className="mt-4 space-y-3">
               {requests.map((r, i) => (
-                <motion.div key={r.id}
+                <motion.div key={r.order_id}
                   initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }}
                   transition={{ delay: i * 0.05 }}
                   className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <span className="font-bold text-gray-900">{r.id}</span>
+                      <span className="font-bold text-gray-900">{r.order_id}</span>
                       <span className="ml-2 text-xs text-gray-400">
-                        {new Date(r.createdAt).toLocaleDateString("ru-RU")}
+                        {new Date(r.created_at).toLocaleDateString("ru-RU")}
                       </span>
                     </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_COLORS[r.status] ?? "bg-gray-100 text-gray-500"}`}>
-                      {STATUS_LABELS[r.status] ?? r.status}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_COLORS[r.status] ?? "bg-gray-100 text-gray-500"}`}>
+                        {STATUS_LABELS[r.status] ?? r.status}
+                      </span>
+                      <a href={`/api/orders/${r.order_id}/pdf`}
+                        download
+                        className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold text-gray-600 transition hover:border-orange-300 hover:text-orange-500">
+                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                        КП
+                      </a>
+                    </div>
                   </div>
                   <div className="mt-3 space-y-1 text-sm text-gray-500">
                     {r.items.map(it => (
                       <div key={it.sku} className="flex justify-between">
                         <span className="line-clamp-1">{it.title}</span>
-                        <span className="shrink-0 pl-3">{it.boxes} кор. · от {formatPrice(it.basePrice)}</span>
+                        <span className="shrink-0 pl-3">{it.boxes} кор. · {formatPrice(parseFloat(it.effective_price))}</span>
                       </div>
                     ))}
                   </div>

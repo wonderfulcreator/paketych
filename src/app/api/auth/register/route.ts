@@ -4,7 +4,12 @@ import { hashPassword, createSession, setSessionCookie } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, name, company, phone, password } = await req.json();
+    const { email, name, company, phone, password, website } = await req.json();
+
+    // Honeypot — если скрытое поле заполнено, это бот
+    if (website) {
+      return NextResponse.json({ ok: false, error: "Ошибка валидации" }, { status: 400 });
+    }
 
     if (!email || !name || !company || !phone || !password) {
       return NextResponse.json(

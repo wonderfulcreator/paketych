@@ -42,10 +42,26 @@ export default function ContactPage() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                const form = e.target as HTMLFormElement;
+                const honeypot = (form.elements.namedItem("website") as HTMLInputElement)?.value;
+                if (honeypot) {
+                  // Бот заполнил скрытое поле — молча игнорируем
+                  setSent(true);
+                  return;
+                }
                 setSent(true);
               }}
               className="mt-4 space-y-3"
             >
+              {/* Honeypot — невидимое поле для ботов */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+                aria-hidden="true"
+              />
               <input className="field" placeholder="Ваше имя" required />
               <input className="field" placeholder="Телефон или email" required />
               <textarea className="field resize-none" rows={4} placeholder="Сообщение" required />

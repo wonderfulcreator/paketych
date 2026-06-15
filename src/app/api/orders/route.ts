@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { getSessionCookie, getSessionUser } from "@/lib/auth";
+import { sendOrderNotification } from "@/lib/email";
 
 // GET /api/orders — список заказов текущего пользователя
 export async function GET() {
@@ -127,6 +128,24 @@ export async function POST(req: NextRequest) {
         // Не прерываем — заказ сохранён в БД
       }
     }
+
+    // Отправляем email-уведомление менеджеру
+    await sendOrderNotification({
+      orderId,
+      client: { name: user.name, company: user.company, email: user.email, phone: user.phone },
+      items: items.map((item: { title: string; sku: string; boxes: number; pcsPerBox?: number; basePrice: number; effectivePrice?: number }) => ({
+        title: item.title,
+        sku: item.sku,
+        boxes: item.boxes,
+        pcsPerBox: item.pcsPerBox ?? 200,
+        basePrice: item.basePrice,
+        effectivePrice: item.effectivePrice ?? item.basePrice,
+      })),
+      comment,
+      discountPct: discountPct ?? 0,
+      totalBase: totalBase ?? 0,
+      totalFinal: totalFinal ?? 0,
+    });
 
     return NextResponse.json({ ok: true, orderId });
   } catch (err) {
