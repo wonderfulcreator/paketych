@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingCart } from "@/components/FloatingCart";
 import { PageProgress } from "@/components/PageProgress";
+import { YandexMetrika } from "@/components/YandexMetrika";
 
 export const metadata: Metadata = {
   title: "Пакет Пакетыч — подарочная упаковка оптом от производителя",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body>
+        <YandexMetrika />
         <AuthProvider>
           <StoreProvider>
             <ToastProvider>
