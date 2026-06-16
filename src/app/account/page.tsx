@@ -37,8 +37,19 @@ function getLevel(count: number) {
 type StoredRequest = {
   order_id: string; created_at: string; status: string; comment: string;
   discount_pct: number; total_base: string; total_final: string;
+  delivery_stage: string; delivery_eta: string | null;
+  tracking_number: string | null; carrier_name: string | null;
+  ordered_by_name: string;
   items: { sku: string; title: string; boxes: number; pcs_per_box: number; base_price: string; effective_price: string }[];
 };
+
+const DELIVERY_STAGES = [
+  { id: "accepted",   label: "Принят" },
+  { id: "packed",     label: "Собран" },
+  { id: "shipped",    label: "Передан в ТК" },
+  { id: "in_transit", label: "В пути" },
+  { id: "delivered",  label: "Доставлен" },
+];
 
 export default function AccountPage() {
   const router = useRouter();
@@ -96,10 +107,16 @@ export default function AccountPage() {
     <div className="container py-8">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-3xl font-extrabold text-gray-900">Личный кабинет</h1>
-        <button onClick={() => { logout(); router.push("/"); }}
-          className="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-500 transition hover:border-orange-300 hover:text-orange-500">
-          Выйти
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => { try { localStorage.removeItem("pp_onboarding_done"); } catch {} location.href = "/"; }}
+            className="hidden rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-500 transition hover:border-orange-300 hover:text-orange-500 sm:inline-flex">
+            Показать обзор сайта
+          </button>
+          <button onClick={() => { logout(); router.push("/"); }}
+            className="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-500 transition hover:border-orange-300 hover:text-orange-500">
+            Выйти
+          </button>
+        </div>
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[300px_1fr]">
@@ -131,6 +148,18 @@ export default function AccountPage() {
 
             <Link href="/favorites" className="mt-4 inline-flex text-sm font-semibold text-orange-500 hover:underline underline-offset-4">
               Избранное →
+            </Link>
+            <Link href="/account/team" className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-orange-500 hover:underline underline-offset-4">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              Команда →
+            </Link>
+            <Link href="/account/documents" className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-orange-500 hover:underline underline-offset-4">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"/>
+              </svg>
+              Документы →
             </Link>
           </div>
 
@@ -184,6 +213,9 @@ export default function AccountPage() {
                       <span className="font-bold text-gray-900">{r.order_id}</span>
                       <span className="ml-2 text-xs text-gray-400">
                         {new Date(r.created_at).toLocaleDateString("ru-RU")}
+                        {r.ordered_by_name && r.ordered_by_name !== user.name && (
+                          <> · оформил {r.ordered_by_name}</>
+                        )}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -207,6 +239,38 @@ export default function AccountPage() {
                       </a>
                     </div>
                   </div>
+
+                  {/* Таймлайн доставки — пока ручной/заглушка, после интеграции с 1С обновляется автоматически */}
+                  {r.status !== "cancelled" && r.status !== "new" && (
+                    <div className="mt-3 flex items-center gap-1">
+                      {DELIVERY_STAGES.map((stage, idx) => {
+                        const currentIdx = DELIVERY_STAGES.findIndex(s => s.id === r.delivery_stage);
+                        const isDone = idx <= currentIdx;
+                        return (
+                          <div key={stage.id} className="flex flex-1 items-center">
+                            <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${isDone ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-400"}`}>
+                              {isDone ? "✓" : idx + 1}
+                            </div>
+                            {idx < DELIVERY_STAGES.length - 1 && (
+                              <div className={`h-0.5 flex-1 ${idx < currentIdx ? "bg-orange-500" : "bg-gray-100"}`} />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {r.status !== "cancelled" && r.status !== "new" && (
+                    <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+                      {DELIVERY_STAGES.map(s => <span key={s.id}>{s.label}</span>)}
+                    </div>
+                  )}
+                  {r.tracking_number && (
+                    <div className="mt-1 text-xs text-gray-400">
+                      Трек-номер: <span className="font-semibold text-gray-600">{r.tracking_number}</span>
+                      {r.carrier_name && <> · {r.carrier_name}</>}
+                    </div>
+                  )}
+
                   <div className="mt-3 space-y-1 text-sm text-gray-500">
                     {r.items.map(it => (
                       <div key={it.sku} className="flex justify-between">

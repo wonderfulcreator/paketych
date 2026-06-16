@@ -67,7 +67,7 @@ export function Header() {
 
           {user ? (
             <div className="flex items-center gap-2">
-              <Link href="/account"
+              <Link href="/account" data-tour="account"
                 className="hidden rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 sm:inline-flex">
                 {user.name.split(" ")[0]}
               </Link>
@@ -77,7 +77,7 @@ export function Header() {
               </button>
 
               {/* Корзина с bounce */}
-              <Link href="/cart"
+              <Link href="/cart" data-tour="cart"
                 className="relative inline-flex items-center gap-1.5 rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-orange-600">
                 <motion.span
                   animate={bounce ? { scale: [1, 1.35, 0.9, 1.1, 1] } : {}}
@@ -118,7 +118,7 @@ export function Header() {
       {/* Нижняя строка */}
       <div className="border-t border-gray-100">
         <div className="container flex items-center gap-3 py-2.5">
-          <Link href="/catalog"
+          <Link href="/catalog" data-tour="catalog"
             className="flex shrink-0 items-center gap-2 rounded-full bg-orange-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600">
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <path d="M4 6h16M4 12h16M4 18h16"/>
@@ -127,7 +127,9 @@ export function Header() {
           </Link>
 
           {/* Живой поиск */}
-          <LiveSearch products={allProducts} />
+          <div data-tour="search" className="flex-1">
+            <LiveSearch products={allProducts} />
+          </div>
 
           {/* Быстрые ссылки */}
           <nav className="hidden shrink-0 items-center gap-5 lg:flex">

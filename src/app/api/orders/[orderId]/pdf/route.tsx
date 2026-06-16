@@ -154,9 +154,11 @@ export async function GET(
     if (!user) return NextResponse.json({ ok: false }, { status: 401 });
 
     const order = await queryOne<OrderData & { id: number; user_id: number }>(
-      `SELECT id, user_id, order_id, status, comment, discount_pct, total_base, total_final, created_at
-       FROM orders WHERE order_id = $1 AND user_id = $2`,
-      [params.orderId, user.id]
+      `SELECT o.id, o.user_id, o.order_id, o.status, o.comment, o.discount_pct, o.total_base, o.total_final, o.created_at
+       FROM orders o
+       JOIN users ou ON ou.id = o.user_id
+       WHERE o.order_id = $1 AND ou.company_id = $2`,
+      [params.orderId, user.company_id]
     );
 
     if (!order) {
@@ -169,8 +171,13 @@ export async function GET(
       [order.id]
     );
 
+    const orderOwner = await queryOne<UserData>(
+      `SELECT name, company, email, phone FROM users WHERE id = $1`,
+      [order.user_id]
+    );
+
     const pdfBuffer = await renderToBuffer(
-      React.createElement(OrderPdf, { order, items, user }) as React.ReactElement
+      React.createElement(OrderPdf, { order, items, user: orderOwner ?? user }) as React.ReactElement
     );
 
     return new NextResponse(new Uint8Array(pdfBuffer), {

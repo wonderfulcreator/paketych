@@ -43,8 +43,10 @@ export async function getSessionUser(sessionId: string) {
     name: string;
     company: string;
     phone: string;
+    company_id: number | null;
+    role: string;
   }>(
-    `SELECT u.id, u.email, u.name, u.company, u.phone
+    `SELECT u.id, u.email, u.name, u.company, u.phone, u.company_id, u.role
      FROM sessions s
      JOIN users u ON u.id = s.user_id
      WHERE s.id = $1

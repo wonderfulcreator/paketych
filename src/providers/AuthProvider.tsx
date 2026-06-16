@@ -8,7 +8,7 @@ import type { User } from "@/lib/types";
 type AuthContextType = {
   user: User | null;
   ready: boolean;
-  register: (data: Omit<User, "id"> & { password: string }) => Promise<{ ok: boolean; error?: string }>;
+  register: (data: Omit<User, "id"> & { password: string; inviteId?: string }) => Promise<{ ok: boolean; error?: string }>;
   login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
   logout: () => Promise<void>;
 };
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setReady(true));
   }, []);
 
-  const register = useCallback(async (data: Omit<User, "id"> & { password: string }) => {
+  const register = useCallback(async (data: Omit<User, "id"> & { password: string; inviteId?: string }) => {
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",

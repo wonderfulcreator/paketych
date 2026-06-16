@@ -22,11 +22,20 @@ export async function GET() {
       total_base: number;
       total_final: number;
       created_at: string;
+      delivery_stage: string;
+      delivery_eta: string | null;
+      tracking_number: string | null;
+      carrier_name: string | null;
+      ordered_by_name: string;
     }>(
-      `SELECT id, order_id, status, comment, discount_pct, total_base, total_final, created_at
-       FROM orders WHERE user_id = $1
-       ORDER BY created_at DESC`,
-      [user.id]
+      `SELECT o.id, o.order_id, o.status, o.comment, o.discount_pct, o.total_base, o.total_final, o.created_at,
+              o.delivery_stage, o.delivery_eta, o.tracking_number, o.carrier_name,
+              u.name AS ordered_by_name
+       FROM orders o
+       JOIN users u ON u.id = o.user_id
+       WHERE u.company_id = $1
+       ORDER BY o.created_at DESC`,
+      [user.company_id]
     );
 
     // Подгружаем позиции для каждого заказа

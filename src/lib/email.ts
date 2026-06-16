@@ -102,3 +102,50 @@ export async function sendOrderNotification(data: OrderEmailData): Promise<void>
     // Не прерываем выполнение — email необязателен для успешного заказа
   }
 }
+
+type TeamInviteData = {
+  to: string;
+  inviterName: string;
+  companyName: string;
+  inviteUrl: string;
+};
+
+export async function sendTeamInvite(data: TeamInviteData): Promise<void> {
+  if (!resend) {
+    console.log("[email] RESEND_API_KEY not set, skipping invite for", data.to);
+    return;
+  }
+
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;color:#111827">
+    <div style="background:#f97316;padding:24px;border-radius:12px 12px 0 0;text-align:center">
+      <h1 style="color:white;margin:0;font-size:18px">Приглашение в Пакет Пакетыч</h1>
+    </div>
+    <div style="border:1px solid #f1f1f1;border-top:none;border-radius:0 0 12px 12px;padding:24px;text-align:center">
+      <p style="font-size:14px;color:#374151">
+        <strong>${data.inviterName}</strong> приглашает вас присоединиться к аккаунту
+        компании <strong>${data.companyName}</strong> на сайте Пакет Пакетыч.
+      </p>
+      <a href="${data.inviteUrl}"
+        style="display:inline-block;margin-top:16px;background:#f97316;color:white;text-decoration:none;
+        padding:12px 28px;border-radius:24px;font-weight:700;font-size:14px">
+        Принять приглашение
+      </a>
+      <p style="font-size:11px;color:#9CA3AF;margin-top:20px">
+        Ссылка действует 14 дней. Если вы не ожидали этого письма — просто игнорируйте его.
+      </p>
+    </div>
+  </div>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.to,
+      subject: `${data.inviterName} приглашает вас в команду «${data.companyName}»`,
+      html,
+    });
+  } catch (err) {
+    console.error("[email] failed to send team invite:", err);
+  }
+}

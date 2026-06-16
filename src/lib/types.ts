@@ -28,6 +28,8 @@ export type User = {
   name: string;
   company: string;
   phone: string;
+  company_id?: number | null;
+  role?: string;
 };
 
 export type RequestItem = {
