@@ -107,6 +107,11 @@ export function LiveSearch({ products }: { products: Product[] }) {
           placeholder="Поиск по названию или артикулу…"
           className="min-w-0 flex-1 bg-transparent px-3 text-sm text-gray-900 outline-none placeholder:text-gray-400"
         />
+        {!focused && !query && (
+          <kbd className="mr-1.5 hidden shrink-0 items-center gap-0.5 rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-gray-400 sm:flex">
+            ⌘K
+          </kbd>
+        )}
         <button type="submit" aria-label="Найти"
           className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-500 text-white transition hover:bg-orange-600">
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">

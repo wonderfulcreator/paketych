@@ -5,7 +5,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/providers/AuthProvider";
+import { useStore } from "@/providers/StoreProvider";
+import { useToast } from "@/providers/ToastProvider";
+import { getAllProducts } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
+
+const allProducts = getAllProducts();
 
 const STATUS_LABELS: Record<string, string> = {
   new: "Новая", processing: "В обработке",
@@ -38,7 +43,10 @@ type StoredRequest = {
 export default function AccountPage() {
   const router = useRouter();
   const { user, ready, logout } = useAuth();
+  const { addToRequest } = useStore();
+  const { showToast } = useToast();
   const [requests, setRequests] = useState<StoredRequest[]>([]);
+  const [repeated, setRepeated] = useState<string | null>(null);
 
   useEffect(() => {
     if (ready && !user) router.replace("/login?redirect=/account");
@@ -52,6 +60,29 @@ export default function AccountPage() {
         .catch(() => {});
     } catch {}
   }, []);
+
+  function repeatOrder(r: StoredRequest) {
+    let added = 0;
+    for (const item of r.items) {
+      const product = allProducts.find(p => p.sku === item.sku);
+      if (product) {
+        addToRequest(product.id, item.boxes);
+        added++;
+      }
+    }
+    setRepeated(r.order_id);
+    if (added > 0) showToast(`Добавлено ${added} позиций из заказа ${r.order_id}`, "");
+    setTimeout(() => setRepeated(null), 2500);
+  }
+
+  // Заполненность профиля
+  const profileFields = [
+    { ok: !!user?.name, label: "Имя" },
+    { ok: !!user?.company, label: "Компания" },
+    { ok: !!user?.email, label: "Email" },
+    { ok: !!user?.phone, label: "Телефон" },
+  ];
+  const profileScore = Math.round((profileFields.filter(f => f.ok).length / profileFields.length) * 100);
 
   if (!ready || !user) return <div className="container py-12 text-gray-400">Загрузка…</div>;
 
@@ -83,6 +114,21 @@ export default function AccountPage() {
             <div className="text-sm font-semibold text-gray-700">{user.email}</div>
             <div className="mt-3 text-xs text-gray-400">Телефон</div>
             <div className="text-sm font-semibold text-gray-700">{user.phone}</div>
+
+            {profileScore < 100 && (
+              <div className="mt-4 rounded-xl bg-gray-50 p-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-gray-600">Профиль заполнен</span>
+                  <span className="font-bold text-orange-500">{profileScore}%</span>
+                </div>
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-gray-200">
+                  <motion.div className="h-full rounded-full bg-orange-500"
+                    initial={{ width: 0 }} animate={{ width: `${profileScore}%` }}
+                    transition={{ duration: 0.6, ease: "easeOut" }} />
+                </div>
+              </div>
+            )}
+
             <Link href="/favorites" className="mt-4 inline-flex text-sm font-semibold text-orange-500 hover:underline underline-offset-4">
               Избранное →
             </Link>
@@ -144,6 +190,13 @@ export default function AccountPage() {
                       <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_COLORS[r.status] ?? "bg-gray-100 text-gray-500"}`}>
                         {STATUS_LABELS[r.status] ?? r.status}
                       </span>
+                      <button onClick={() => repeatOrder(r)}
+                        className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold text-gray-600 transition hover:border-orange-300 hover:text-orange-500">
+                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16M3 21v-5h5"/>
+                        </svg>
+                        {repeated === r.order_id ? "Добавлено ✓" : "Повторить"}
+                      </button>
                       <a href={`/api/orders/${r.order_id}/pdf`}
                         download
                         className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold text-gray-600 transition hover:border-orange-300 hover:text-orange-500">

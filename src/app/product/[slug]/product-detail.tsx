@@ -21,7 +21,32 @@ export function ProductDetail({ product, related }: { product: Product; related:
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const [added, setAdded] = useState(false);
+  const [restockSubscribed, setRestockSubscribed] = useState(false);
   const { add: addViewed } = useRecentlyViewed();
+
+  useEffect(() => {
+    if (!user) return;
+    fetch("/api/restock-alert", { credentials: "include" })
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok && data.alerts?.includes(product.id)) setRestockSubscribed(true);
+      })
+      .catch(() => {});
+  }, [user, product.id]);
+
+  async function subscribeRestock() {
+    if (!user) { router.push(`/login?redirect=/product/${product.slug}`); return; }
+    try {
+      await fetch("/api/restock-alert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ productId: product.id, sku: product.sku }),
+      });
+      setRestockSubscribed(true);
+      showToast("Сообщим о поступлении на email", "");
+    } catch {}
+  }
 
   const fav = isFavorite(product.id);
   const existing = request.find(r => r.productId === product.id);
@@ -141,10 +166,25 @@ export function ProductDetail({ product, related }: { product: Product; related:
           <p className="mt-1 text-xs text-gray-400">Точная цена формируется менеджером с учётом объёма заказа</p>
 
           {user && (
-            <div className={cn("mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold",
-              product.isAvailable ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-400")}>
-              <span className={cn("h-2 w-2 rounded-full", product.isAvailable ? "bg-green-500" : "bg-gray-300")} />
-              {product.isAvailable ? "Есть на складе" : "Под заказ"}
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <div className={cn("inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold",
+                product.isAvailable ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-400")}>
+                <span className={cn("h-2 w-2 rounded-full", product.isAvailable ? "bg-green-500" : "bg-gray-300")} />
+                {product.isAvailable ? "Есть на складе" : "Под заказ"}
+              </div>
+              {!product.isAvailable && (
+                <button onClick={subscribeRestock} disabled={restockSubscribed}
+                  className={cn("inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold transition",
+                    restockSubscribed
+                      ? "bg-orange-50 text-orange-600 cursor-default"
+                      : "border border-gray-200 text-gray-500 hover:border-orange-300 hover:text-orange-500")}>
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10 5a2 2 0 1 1 4 0c3.07.6 5 3.18 5 6.32V14l1.5 2.5h-17L5 14v-2.68C5 8.18 6.93 5.6 10 5Z"/>
+                    <path d="M9 19a3 3 0 0 0 6 0"/>
+                  </svg>
+                  {restockSubscribed ? "Сообщим о поступлении ✓" : "Сообщить о поступлении"}
+                </button>
+              )}
             </div>
           )}
 

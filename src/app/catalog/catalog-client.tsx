@@ -42,6 +42,22 @@ const COLLECTION_GROUPS: { label: string; collections: string[] }[] = [
   },
 ];
 
+const COLOR_SWATCHES: { label: string; hex: string }[] = [
+  { label: "Белый",          hex: "#FFFFFF" },
+  { label: "Серый",          hex: "#9CA3AF" },
+  { label: "Красный",        hex: "#EF4444" },
+  { label: "Оранжевый",      hex: "#F97316" },
+  { label: "Жёлтый",         hex: "#FCD34D" },
+  { label: "Зелёный",        hex: "#22C55E" },
+  { label: "Бирюзовый",      hex: "#14B8A6" },
+  { label: "Синий",          hex: "#3B82F6" },
+  { label: "Фиолетовый",     hex: "#A855F7" },
+  { label: "Розовый",        hex: "#EC4899" },
+  { label: "Розово-мятный",  hex: "#F0ABFC" },
+  { label: "Пудровый",       hex: "#FBCFE8" },
+  { label: "Микс",           hex: "#9333EA" },
+];
+
 function effectivePrice(p: Product) {
   return p.isSale && p.salePrice ? p.salePrice : p.basePrice;
 }
@@ -58,6 +74,7 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
   const [selSizes,      setSelSizes]      = useState<string[]>([]);
   const [selCols,       setSelCols]       = useState<string[]>([]);
   const [selThemes,     setSelThemes]     = useState<string[]>([]);
+  const [selColors,     setSelColors]     = useState<string[]>([]);
   const [sort,          setSort]          = useState("popular");
   const [visible,       setVisible]       = useState(24);
   const [mobileOpen,    setMobileOpen]    = useState(false);
@@ -75,6 +92,7 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
     if (selSizes.length)  res = res.filter(p => selSizes.includes(p.size));
     if (selCols.length)   res = res.filter(p => selCols.includes(p.collection));
     if (selThemes.length) res = res.filter(p => p.theme.some(t => selThemes.includes(t)));
+    if (selColors.length) res = res.filter(p => selColors.includes(p.color));
 
     if (query.trim()) {
       const q = query.trim().toLowerCase();
@@ -93,10 +111,11 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
       default:           res.sort((a, b) => +b.isHit - +a.isHit);
     }
     return res;
-  }, [products, onlyAvail, onlySale, onlyNew, selSizes, selCols, selThemes, query, searchMode, sort]);
+  }, [products, onlyAvail, onlySale, onlyNew, selSizes, selCols, selThemes, selColors, query, searchMode, sort]);
 
   // Группируем видимые коллекции для отображения в фильтре
   const presentCollections = new Set(products.map(p => p.collection));
+  const presentColors = new Set(products.map(p => p.color));
 
   const FiltersContent = (
     <div className="space-y-6">
@@ -156,9 +175,29 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
         </div>
       </FilterSection>
 
+      {/* Подбор по цвету бренда */}
+      <FilterSection title="Цвет бренда">
+        <div className="flex flex-wrap gap-2">
+          {COLOR_SWATCHES.filter(c => presentColors.has(c.label)).map(c => (
+            <button key={c.label} onClick={() => toggle(selColors, setSelColors, c.label)}
+              title={c.label}
+              className={cn("relative flex h-9 w-9 items-center justify-center rounded-full border-2 transition",
+                selColors.includes(c.label) ? "border-orange-500 scale-110" : "border-gray-200 hover:border-gray-300")}>
+              <span className="h-6 w-6 rounded-full" style={{ backgroundColor: c.hex, border: c.hex === "#FFFFFF" ? "1px solid #E5E7EB" : undefined }} />
+              {selColors.includes(c.label) && (
+                <svg className="absolute h-3.5 w-3.5 text-white drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"
+                  style={{ filter: c.hex === "#FFFFFF" || c.hex === "#FCD34D" ? "invert(1) drop-shadow(0 0 1px white)" : undefined }}>
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      </FilterSection>
+
       {/* Сброс */}
-      {(selSizes.length || selCols.length || selThemes.length || onlySale || onlyNew) ? (
-        <button onClick={() => { setSelSizes([]); setSelCols([]); setSelThemes([]); setOnlySale(false); setOnlyNew(false); setVisible(24); }}
+      {(selSizes.length || selCols.length || selThemes.length || selColors.length || onlySale || onlyNew) ? (
+        <button onClick={() => { setSelSizes([]); setSelCols([]); setSelThemes([]); setSelColors([]); setOnlySale(false); setOnlyNew(false); setVisible(24); }}
           className="w-full rounded-xl border border-gray-200 py-2 text-sm text-gray-500 transition hover:border-orange-300 hover:text-orange-500">
           Сбросить фильтры
         </button>
@@ -190,9 +229,9 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
                 <path d="M22 3H2l8 9.46V19l4 2v-8.54Z"/>
               </svg>
               Фильтры
-              {(selSizes.length + selCols.length + selThemes.length) > 0 && (
+              {(selSizes.length + selCols.length + selThemes.length + selColors.length) > 0 && (
                 <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-orange-500 px-1.5 text-xs text-white">
-                  {selSizes.length + selCols.length + selThemes.length}
+                  {selSizes.length + selCols.length + selThemes.length + selColors.length}
                 </span>
               )}
             </button>
@@ -206,7 +245,7 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
           </div>
 
           {/* Активные фильтры-чипсы */}
-          {(selSizes.length > 0 || selCols.length > 0 || selThemes.length > 0 || onlySale || onlyNew) && (
+          {(selSizes.length > 0 || selCols.length > 0 || selThemes.length > 0 || selColors.length > 0 || onlySale || onlyNew) && (
             <div className="mb-4 flex flex-wrap gap-2">
               {onlyNew && (
                 <button onClick={() => { setOnlyNew(false); setVisible(24); }}
@@ -238,7 +277,13 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
                   {t} <span className="text-purple-400">×</span>
                 </button>
               ))}
-              <button onClick={() => { setSelSizes([]); setSelCols([]); setSelThemes([]); setOnlySale(false); setOnlyNew(false); setVisible(24); }}
+              {selColors.map(c => (
+                <button key={c} onClick={() => toggle(selColors, setSelColors, c)}
+                  className="flex items-center gap-1.5 rounded-full bg-pink-50 border border-pink-200 px-3 py-1.5 text-xs font-semibold text-pink-700 transition hover:bg-pink-100">
+                  {c} <span className="text-pink-400">×</span>
+                </button>
+              ))}
+              <button onClick={() => { setSelSizes([]); setSelCols([]); setSelThemes([]); setSelColors([]); setOnlySale(false); setOnlyNew(false); setVisible(24); }}
                 className="flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-500 transition hover:border-orange-300 hover:text-orange-500">
                 Сбросить все
               </button>
