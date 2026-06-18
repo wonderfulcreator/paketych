@@ -1,10 +1,12 @@
 "use client";
 import { RecentlyViewed } from "@/components/RecentlyViewed";
 
-import { useMemo, useState, Suspense } from "react";
+import { useMemo, useState, useEffect, Suspense } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductGridSkeleton } from "@/components/Skeletons";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -76,6 +78,12 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
   const [selThemes,     setSelThemes]     = useState<string[]>([]);
   const [selColors,     setSelColors]     = useState<string[]>([]);
   const [sort,          setSort]          = useState("popular");
+  const [isLoading,     setIsLoading]     = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 450);
+    return () => clearTimeout(t);
+  }, []);
   const [visible,       setVisible]       = useState(24);
   const [mobileOpen,    setMobileOpen]    = useState(false);
 
@@ -291,14 +299,16 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
           )}
 
 
-          {filtered.length === 0 ? (
+          {isLoading ? (
+            <ProductGridSkeleton count={8} />
+          ) : filtered.length === 0 ? (
             <div className="rounded-2xl border border-gray-100 bg-gray-50 p-12 text-center text-gray-400">
               Ничего не найдено. Попробуйте изменить фильтры или поисковый запрос.
             </div>
           ) : (
             <>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
-                {filtered.slice(0, visible).map(p => <ProductCard key={p.id} product={p} />)}
+                {filtered.slice(0, visible).map((p, idx) => <ProductCard key={p.id} product={p} index={idx} />)}
               </div>
               {visible < filtered.length && (
                 <div className="mt-8 text-center">
@@ -354,18 +364,26 @@ function Check({ label, checked, onChange }: { label: string; checked: boolean; 
     <button onClick={onChange}
       className="flex w-full items-center gap-2.5 rounded-lg px-1 py-1 text-left text-sm transition hover:bg-gray-50">
       {/* Чекбокс — всегда виден на белом фоне */}
-      <span className={cn(
-        "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition",
+      <motion.span
+        animate={checked ? { scale: [1, 1.18, 1] } : { scale: 1 }}
+        transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+        className={cn(
+        "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors",
         checked
           ? "border-orange-500 bg-orange-500 text-white"
           : "border-gray-300 bg-white"
       )}>
-        {checked && (
-          <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round">
-            <path d="M20 6 9 17l-5-5"/>
-          </svg>
-        )}
-      </span>
+        <AnimatePresence>
+          {checked && (
+            <motion.svg
+              initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 20 }}
+              className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round">
+              <path d="M20 6 9 17l-5-5"/>
+            </motion.svg>
+          )}
+        </AnimatePresence>
+      </motion.span>
       <span className={cn("leading-tight", checked ? "font-semibold text-gray-900" : "text-gray-600")}>
         {label}
       </span>

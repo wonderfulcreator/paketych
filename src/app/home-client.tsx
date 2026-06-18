@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/ProductCard";
+import { TimeAwareMascot } from "@/components/TimeAwareMascot";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -130,7 +131,7 @@ function ProductSection({ label, title, subtitle, href, products }: {
         </Link>
       </div>
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        {products.map(p => <ProductCard key={p.id} product={p} />)}
+        {products.map((p, idx) => <ProductCard key={p.id} product={p} index={idx} />)}
       </div>
     </section>
   );
@@ -160,8 +161,11 @@ export function HomeClient({ featured, fresh }: { featured: Product[]; fresh: Pr
                 и оптовых закупщиков. Свежие авторские дизайны каждый сезон,
                 прозрачные условия поставки и персональный менеджер.
               </motion.p>
+              <motion.div initial={{ opacity:0, y:14 }} animate={{ opacity:1, y:0 }} transition={{ duration:.5, delay:.25 }}>
+                <TimeAwareMascot className="mt-5" />
+              </motion.div>
               <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:.6, delay:.3 }}
-                className="mt-8 flex flex-wrap gap-3">
+                className="mt-6 flex flex-wrap gap-3">
                 <Link href="/catalog" className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-orange-600">
                   Перейти в каталог
                 </Link>

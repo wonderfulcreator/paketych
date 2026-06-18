@@ -12,6 +12,7 @@ import { YandexMetrika } from "@/components/YandexMetrika";
 import { CompareBar } from "@/components/CompareBar";
 import { HotkeysProvider } from "@/components/HotkeysProvider";
 import { OnboardingTour } from "@/components/OnboardingTour";
+import { RippleProvider } from "@/components/RippleProvider";
 
 export const metadata: Metadata = {
   title: "Пакет Пакетыч — подарочная упаковка оптом от производителя",
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <YandexMetrika />
         <HotkeysProvider />
+        <RippleProvider />
         <AuthProvider>
           <OnboardingTour />
           <StoreProvider>

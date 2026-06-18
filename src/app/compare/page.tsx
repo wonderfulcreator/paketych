@@ -51,7 +51,7 @@ export default function ComparePage() {
           </span>{" "}
           на карточке товара.
           <div className="mt-4">
-            <Link href="/catalog" className="text-orange-500 hover:underline underline-offset-4">Перейти в каталог →</Link>
+            <Link href="/catalog" className="text-orange-500 link-underline">Перейти в каталог →</Link>
           </div>
         </div>
       ) : (

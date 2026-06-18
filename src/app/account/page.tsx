@@ -9,6 +9,7 @@ import { useStore } from "@/providers/StoreProvider";
 import { useToast } from "@/providers/ToastProvider";
 import { getAllProducts } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
+import { PdfDownloadButton } from "@/components/PdfDownloadButton";
 
 const allProducts = getAllProducts();
 
@@ -146,16 +147,16 @@ export default function AccountPage() {
               </div>
             )}
 
-            <Link href="/favorites" className="mt-4 inline-flex text-sm font-semibold text-orange-500 hover:underline underline-offset-4">
+            <Link href="/favorites" className="mt-4 inline-flex text-sm font-semibold text-orange-500 link-underline">
               Избранное →
             </Link>
-            <Link href="/account/team" className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-orange-500 hover:underline underline-offset-4">
+            <Link href="/account/team" className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-orange-500 link-underline">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
               Команда →
             </Link>
-            <Link href="/account/documents" className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-orange-500 hover:underline underline-offset-4">
+            <Link href="/account/documents" className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-orange-500 link-underline">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"/>
               </svg>
@@ -197,7 +198,7 @@ export default function AccountPage() {
           {requests.length === 0 ? (
             <div className="mt-4 rounded-2xl border border-gray-100 bg-gray-50 p-8 text-center text-gray-400">
               Заявок пока нет.{" "}
-              <Link href="/catalog" className="text-orange-500 hover:underline underline-offset-4">
+              <Link href="/catalog" className="text-orange-500 link-underline">
                 Перейти в каталог
               </Link>
             </div>
@@ -229,14 +230,8 @@ export default function AccountPage() {
                         </svg>
                         {repeated === r.order_id ? "Добавлено ✓" : "Повторить"}
                       </button>
-                      <a href={`/api/orders/${r.order_id}/pdf`}
-                        download
-                        className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold text-gray-600 transition hover:border-orange-300 hover:text-orange-500">
-                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                        </svg>
-                        КП
-                      </a>
+                      <PdfDownloadButton orderId={r.order_id}
+                        className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold text-gray-600 transition hover:border-orange-300 hover:text-orange-500" />
                     </div>
                   </div>
 

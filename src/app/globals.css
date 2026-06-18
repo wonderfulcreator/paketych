@@ -31,10 +31,10 @@ body {
     @apply font-display font-extrabold text-gray-900;
   }
   .brand-link {
-    @apply font-semibold text-orange-500 underline-offset-4 transition hover:text-orange-700 hover:underline;
+    @apply link-underline font-semibold text-orange-500 transition hover:text-orange-700;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-orange-600 active:scale-95;
+    @apply ripple-container inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-orange-600 active:scale-95;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-bold text-gray-700 transition hover:border-orange-300 hover:bg-orange-50;
@@ -42,4 +42,68 @@ body {
   .field {
     @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-orange-400 focus:ring-2 focus:ring-orange-100;
   }
+
+  /* Анимированное подчёркивание ссылок слева→направо */
+  .link-underline {
+    @apply relative inline-block;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 1.5px;
+    background: currentColor;
+    transition: width 0.25s ease;
+  }
+  .link-underline:hover::after {
+    width: 100%;
+  }
+
+  /* Переливающаяся градиентная рамка для бейджей */
+  .gradient-shimmer-border {
+    padding: 1.5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #F97316, #FBBF24, #22C55E, #F97316);
+    background-size: 300% 100%;
+    animation: shimmer-border-move 4s linear infinite;
+  }
+  @keyframes shimmer-border-move {
+    to { background-position: 300% 0; }
+  }
+
+  /* Ripple-контейнер для кнопок */
+  .ripple-container {
+    position: relative;
+    overflow: hidden;
+  }
+  .ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    pointer-events: none;
+    animation: ripple-anim 0.55s ease-out;
+  }
+  @keyframes ripple-anim {
+    to { transform: scale(3); opacity: 0; }
+  }
+
+  /* Чекбокс с пружинкой */
+  .checkbox-spring {
+    transition: transform 0.18s cubic-bezier(.34, 1.56, .64, 1), background-color 0.15s, border-color 0.15s;
+  }
+  .checkbox-spring.checked {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes box-loader-tilt {
+  0%, 100% { transform: rotate(-4deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(-3px); }
+}
+@keyframes box-loader-lid {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(-6deg); }
 }

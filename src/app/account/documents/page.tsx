@@ -85,7 +85,7 @@ export default function DocumentsPage() {
           {orders.length === 0 ? (
             <div className="mt-3 rounded-2xl border border-gray-100 bg-gray-50 p-8 text-center text-gray-400">
               Заказов пока нет.{" "}
-              <Link href="/catalog" className="text-orange-500 hover:underline underline-offset-4">Перейти в каталог</Link>
+              <Link href="/catalog" className="text-orange-500 link-underline">Перейти в каталог</Link>
             </div>
           ) : (
             <div className="mt-3 space-y-2">

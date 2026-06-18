@@ -12,6 +12,7 @@ import { useToast } from "@/providers/ToastProvider";
 import { ProductCard } from "@/components/ProductCard";
 import { RecentlyViewed, useRecentlyViewed } from "@/components/RecentlyViewed";
 import { Lightbox } from "@/components/Lightbox";
+import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 
 export function ProductDetail({ product, related }: { product: Product; related: Product[] }) {
   const router = useRouter();
@@ -69,6 +70,7 @@ export function ProductDetail({ product, related }: { product: Product; related:
 
   return (
     <div className="container py-8">
+      <ScrollProgressBar />
       {lightbox && (
         <Lightbox
           images={images} current={active}

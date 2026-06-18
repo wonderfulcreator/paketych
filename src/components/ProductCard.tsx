@@ -27,13 +27,14 @@ function FlyParticle({ onDone }: { onDone: () => void }) {
   );
 }
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   const router = useRouter();
   const { user } = useAuth();
   const { isFavorite, toggleFavorite, addToRequest, request, setBoxes, removeFromRequest } = useStore();
   const { isComparing, toggleCompare } = useCompare();
   const { showToast } = useToast();
   const [flying, setFlying] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const fav = isFavorite(product.id);
 
   const existing = request.find(r => r.productId === product.id);
@@ -69,7 +70,7 @@ export function ProductCard({ product }: { product: Product }) {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: Math.min(index % 4, 3) * 0.06 }}
         className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition hover:-translate-y-1 hover:shadow-lift"
       >
         {/* Фото */}
@@ -77,13 +78,20 @@ export function ProductCard({ product }: { product: Product }) {
           className="relative block overflow-hidden bg-gray-50" style={{ aspectRatio: "1/1" }}>
           <Image src={img} alt={product.title} fill
             sizes="(max-width:768px) 50vw, 25vw"
-            className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
+            className={cn(
+              "object-contain p-4 transition-all duration-500 ease-[cubic-bezier(.34,1.56,.64,1)]",
+              "group-hover:scale-105 group-hover:-translate-y-1 group-hover:-rotate-2",
+              imgLoaded ? "opacity-100 blur-0 scale-100" : "opacity-0 blur-md scale-105"
+            )}
+            onLoad={() => setImgLoaded(true)}
           />
 
           {/* Бейджи */}
           <div className="absolute left-2 top-2 flex flex-col gap-1">
             {product.isNew && (
-              <span className="rounded-full bg-green-500 px-2 py-0.5 text-[11px] font-bold text-white shadow-sm">Новинка</span>
+              <span className="gradient-shimmer-border">
+                <span className="block rounded-full bg-green-500 px-2 py-0.5 text-[11px] font-bold text-white">Новинка</span>
+              </span>
             )}
             {product.isSale && product.salePrice && (
               <span className="rounded-full bg-red-500 px-2 py-0.5 text-[11px] font-bold text-white shadow-sm">
@@ -91,14 +99,19 @@ export function ProductCard({ product }: { product: Product }) {
               </span>
             )}
             {product.isHit && !product.isNew && (
-              <span className="rounded-full bg-orange-400 px-2 py-0.5 text-[11px] font-bold text-white shadow-sm">Хит</span>
+              <span className="gradient-shimmer-border">
+                <span className="block rounded-full bg-orange-400 px-2 py-0.5 text-[11px] font-bold text-white">Хит</span>
+              </span>
             )}
           </div>
 
           {/* Избранное */}
-          <button onClick={e => { e.preventDefault(); toggleFavorite(product.id); }}
+          <motion.button onClick={e => { e.preventDefault(); toggleFavorite(product.id); }}
+            whileTap={{ scale: 0.85 }}
+            animate={fav ? { scale: [1, 1.35, 0.9, 1.1, 1] } : { scale: 1 }}
+            transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
             className={cn(
-              "absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white/95 shadow-sm backdrop-blur transition",
+              "absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white/95 shadow-sm backdrop-blur transition-colors",
               fav ? "border-orange-400 text-orange-500" : "border-gray-200 text-gray-400 hover:text-orange-400"
             )}
             aria-label="В избранное">
@@ -106,7 +119,7 @@ export function ProductCard({ product }: { product: Product }) {
               fill={fav ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
               <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
             </svg>
-          </button>
+          </motion.button>
 
           {/* Сравнение */}
           <button onClick={e => { e.preventDefault(); toggleCompare(product.id); }}
@@ -167,8 +180,9 @@ export function ProductCard({ product }: { product: Product }) {
                   </button>
                   <div className="flex flex-1 flex-col items-center">
                     <motion.span key={count}
-                      initial={{ y: -10, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
+                      initial={{ scale: 1.4, y: -4 }}
+                      animate={{ scale: 1, y: 0 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 15 }}
                       className="text-sm font-extrabold text-orange-600">
                       {count} кор.
                     </motion.span>

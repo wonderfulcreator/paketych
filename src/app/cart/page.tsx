@@ -9,6 +9,8 @@ import { getAllProducts } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import { useStore } from "@/providers/StoreProvider";
+import { MagneticButton } from "@/components/MagneticButton";
+import { AnimatedNumber } from "@/components/AnimatedNumber";
 
 const allProducts = getAllProducts();
 
@@ -325,37 +327,35 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>Коробок</span>
-                  <span className="font-semibold text-gray-900">{totalBoxes}</span>
+                  <span className="font-semibold text-gray-900">
+                    <AnimatedNumber value={totalBoxes} duration={350} />
+                  </span>
                 </div>
                 {discountPct > 0 && (
                   <>
                     <div className="flex justify-between text-gray-400">
                       <span>Сумма без скидки</span>
-                      <span className="line-through">{formatPrice(subtotal)}</span>
+                      <span className="line-through"><AnimatedNumber value={subtotal} format={formatPrice} /></span>
                     </div>
                     <div className="flex justify-between text-green-600">
                       <span className="font-semibold">Скидка {discount?.label}</span>
-                      <span className="font-semibold">−{formatPrice(saved)}</span>
+                      <span className="font-semibold">−<AnimatedNumber value={saved} format={formatPrice} /></span>
                     </div>
                   </>
                 )}
                 <div className="flex justify-between border-t border-gray-200 pt-2">
                   <span className="font-bold text-gray-900">Итого</span>
-                  <motion.span key={total}
-                    initial={{ scale:1.1, color:"#f97316" }} animate={{ scale:1, color:"#111827" }}
-                    transition={{ duration:0.3 }}
-                    className="font-extrabold text-gray-900 text-base">
-                    {formatPrice(total)}
-                  </motion.span>
+                  <span className="font-extrabold text-gray-900 text-base">
+                    <AnimatedNumber value={total} format={formatPrice} />
+                  </span>
                 </div>
                 <p className="text-[11px] text-gray-400">* Базовые цены. Финальная сумма — в КП от менеджера.</p>
               </div>
 
-              <motion.button onClick={submit}
-                whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
-                className="mt-4 w-full rounded-xl bg-orange-500 py-3 font-bold text-white transition hover:bg-orange-600">
+              <MagneticButton onClick={submit} strength={0.3}
+                className="ripple-container mt-4 w-full rounded-xl bg-orange-500 py-3 font-bold text-white transition hover:bg-orange-600 active:scale-[0.97]">
                 Оформить заказ
-              </motion.button>
+              </MagneticButton>
             </div>
           </aside>
         </div>
