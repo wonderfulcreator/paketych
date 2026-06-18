@@ -11,6 +11,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useStore } from "@/providers/StoreProvider";
 import { useCompare } from "@/providers/CompareProvider";
 import { useToast } from "@/providers/ToastProvider";
+import { playClickSound, vibrate } from "@/lib/feedback";
 
 /* ── анимация «полёта» в корзину ─────────────────────────────────── */
 function FlyParticle({ onDone }: { onDone: () => void }) {
@@ -49,6 +50,8 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       setFlying(true);
       addToRequest(product.id, 1);
       showToast(product.title, img);
+      playClickSound();
+      vibrate(10);
     }
   }
 
@@ -71,6 +74,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: Math.min(index % 4, 3) * 0.06 }}
+        onMouseEnter={() => router.prefetch(`/product/${product.slug}`)}
         className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition hover:-translate-y-1 hover:shadow-lift"
       >
         {/* Фото */}
@@ -106,7 +110,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           </div>
 
           {/* Избранное */}
-          <motion.button onClick={e => { e.preventDefault(); toggleFavorite(product.id); }}
+          <motion.button onClick={e => { e.preventDefault(); toggleFavorite(product.id); vibrate(8); }}
             whileTap={{ scale: 0.85 }}
             animate={fav ? { scale: [1, 1.35, 0.9, 1.1, 1] } : { scale: 1 }}
             transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}

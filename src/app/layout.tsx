@@ -13,6 +13,8 @@ import { CompareBar } from "@/components/CompareBar";
 import { HotkeysProvider } from "@/components/HotkeysProvider";
 import { OnboardingTour } from "@/components/OnboardingTour";
 import { RippleProvider } from "@/components/RippleProvider";
+import { EasterEgg } from "@/components/EasterEgg";
+import { PageTransition } from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Пакет Пакетыч — подарочная упаковка оптом от производителя",
@@ -36,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <YandexMetrika />
         <HotkeysProvider />
         <RippleProvider />
+        <EasterEgg />
         <AuthProvider>
           <OnboardingTour />
           <StoreProvider>
@@ -44,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <PageProgress />
                 <div className="relative z-10 flex min-h-screen flex-col">
                   <Header />
-                  <main className="flex-1">{children}</main>
+                  <main className="flex-1"><PageTransition>{children}</PageTransition></main>
                   <Footer />
                 </div>
                 <FloatingCart />

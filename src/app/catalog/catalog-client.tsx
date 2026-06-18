@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/Skeletons";
+import { EmptyState, EmptyIcons } from "@/components/EmptyState";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -302,9 +303,13 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
           {isLoading ? (
             <ProductGridSkeleton count={8} />
           ) : filtered.length === 0 ? (
-            <div className="rounded-2xl border border-gray-100 bg-gray-50 p-12 text-center text-gray-400">
-              Ничего не найдено. Попробуйте изменить фильтры или поисковый запрос.
-            </div>
+            <EmptyState
+              icon={EmptyIcons.search}
+              title="Такого пакета пока нет в коробке"
+              description="Попробуйте другой запрос или сбросьте фильтры"
+              actionLabel="Сбросить фильтры"
+              onAction={() => { setSelSizes([]); setSelCols([]); setSelThemes([]); setSelColors([]); setOnlySale(false); setOnlyNew(false); setQuery(""); setVisible(24); }}
+            />
           ) : (
             <>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">

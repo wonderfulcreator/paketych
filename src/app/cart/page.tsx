@@ -11,6 +11,8 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useStore } from "@/providers/StoreProvider";
 import { MagneticButton } from "@/components/MagneticButton";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
+import { playSuccessSound, vibrate } from "@/lib/feedback";
+import { EmptyState, EmptyIcons } from "@/components/EmptyState";
 
 const allProducts = getAllProducts();
 
@@ -180,6 +182,8 @@ export default function CartPage() {
     }
     setRequestId(id);
     setShowConfetti(true);
+    playSuccessSound();
+    vibrate([10, 40, 10]);
     clearRequest();
     try { localStorage.removeItem("pp_cart_comment_draft"); } catch {}
     setTimeout(() => setSubmitted(true), 600);
@@ -193,8 +197,8 @@ export default function CartPage() {
           <motion.div initial={{ scale:0 }} animate={{ scale:1 }}
             transition={{ type:"spring", stiffness:400, damping:20, delay:0.1 }}
             className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl">✓</motion.div>
-          <h1 className="font-display text-2xl font-extrabold text-gray-900">Заказ {requestId} принят</h1>
-          <p className="mt-2 text-sm text-gray-500">Менеджер свяжется с вами в течение рабочего дня и пришлёт коммерческое предложение.</p>
+          <h1 className="font-display text-2xl font-extrabold text-gray-900">Готово! Заказ {requestId} уже летит к менеджеру</h1>
+          <p className="mt-2 text-sm text-gray-500">Свяжемся с вами в течение рабочего дня и пришлём коммерческое предложение.</p>
           <div className="mt-6 flex justify-center gap-2">
             <Link href="/account" className="rounded-full border border-gray-200 px-5 py-2.5 text-sm font-bold text-gray-700 transition hover:bg-gray-50">Мои заказы</Link>
             <Link href="/catalog" className="rounded-full bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600">В каталог</Link>
@@ -211,9 +215,14 @@ export default function CartPage() {
       <h1 className="font-display text-3xl font-extrabold text-gray-900">Корзина</h1>
 
       {lines.length === 0 ? (
-        <div className="mt-6 rounded-2xl border border-gray-100 bg-gray-50 p-10 text-center text-gray-400">
-          Корзина пуста.{" "}
-          <Link href="/catalog" className="text-orange-500 hover:underline underline-offset-4">Перейти в каталог</Link>
+        <div className="mt-6">
+          <EmptyState
+            icon={EmptyIcons.cart}
+            title="Пакетыч заскучал без заказов"
+            description="Соберите первую коробку — каталог уже ждёт"
+            actionLabel="Перейти в каталог"
+            actionHref="/catalog"
+          />
         </div>
       ) : (
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">

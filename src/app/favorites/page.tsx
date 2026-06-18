@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { getAllProducts } from "@/lib/products";
 import { useStore } from "@/providers/StoreProvider";
 import { ProductCard } from "@/components/ProductCard";
+import { EmptyState, EmptyIcons } from "@/components/EmptyState";
 
 const allProducts = getAllProducts();
 
@@ -17,14 +17,19 @@ export default function FavoritesPage() {
     <div className="container py-8">
       <h1 className="heading text-3xl">Избранное</h1>
       {items.length === 0 ? (
-        <div className="rounded-2xl border border-gray-100 bg-gray-50 mt-6 p-10 text-center text-gray-500">
-          В избранном пока пусто.{" "}
-          <Link href="/catalog" className="brand-link">Выбрать товары</Link>
+        <div className="mt-6">
+          <EmptyState
+            icon={EmptyIcons.heart}
+            title="Пока ничего не отложено"
+            description="Нажмите на сердечко у понравившегося пакета"
+            actionLabel="Смотреть каталог"
+            actionHref="/catalog"
+          />
         </div>
       ) : (
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
-          {items.map((p) => (
-            <ProductCard key={p.id} product={p} />
+          {items.map((p, idx) => (
+            <ProductCard key={p.id} product={p} index={idx} />
           ))}
         </div>
       )}

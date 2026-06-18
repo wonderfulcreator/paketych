@@ -26,7 +26,7 @@ export default function Error({
       />
 
       <h1 className="mt-6 font-display text-3xl font-extrabold text-gray-900 md:text-4xl">
-        Что-то пошло не так
+        Что-то зацепилось за ленту
       </h1>
       <p className="mt-3 max-w-md text-sm text-gray-500 md:text-base">
         На нашей стороне произошла ошибка. Попробуйте обновить страницу — если не поможет, мы уже работаем над этим.

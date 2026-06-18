@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SoundToggle } from "./SoundToggle";
 
 export function Footer() {
   return (
@@ -43,7 +44,10 @@ export function Footer() {
       <div className="border-t border-gray-100">
         <div className="container flex flex-col items-center justify-between gap-2 py-5 text-xs text-gray-400 sm:flex-row">
           <span>© {new Date().getFullYear()} Пакет Пакетыч. Все права защищены.</span>
-          <Link href="/privacy" className="hover:text-orange-500">Политика конфиденциальности</Link>
+          <div className="flex items-center gap-3">
+            <Link href="/privacy" className="hover:text-orange-500">Политика конфиденциальности</Link>
+            <SoundToggle />
+          </div>
         </div>
       </div>
     </footer>
