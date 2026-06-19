@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useRef } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/providers/ToastProvider";
@@ -13,12 +14,45 @@ const SIZES = [
   { id: "XXL", label: "XXL", dims: "560×410×240 мм", scale: 1.05 },
 ] as const;
 
+const SHAPES = [
+  { id: "standard", label: "Стандартный", widthRatio: 1 },
+  { id: "narrow",   label: "Узкий",       widthRatio: 0.62 },
+  { id: "wide",     label: "Широкий",     widthRatio: 1.35 },
+] as const;
+
+const MATERIALS = [
+  { id: "laminated", label: "Ламинированная бумага", sheen: 0.18 },
+  { id: "kraft",      label: "Крафт",                  sheen: 0 },
+  { id: "matte",       label: "Мелованная бумага",     sheen: 0.06 },
+  { id: "lux",         label: "Люкс с тиснением",       sheen: 0.32 },
+] as const;
+
+const HANDLES = [
+  { id: "cord",   label: "Крученый шнур" },
+  { id: "ribbon", label: "Лента" },
+  { id: "none",   label: "Без ручки" },
+] as const;
+
+const LOGO_POSITIONS = [
+  { id: "center", label: "По центру" },
+  { id: "corner",  label: "В углу" },
+  { id: "repeat",  label: "Повтором" },
+] as const;
+
 const COLORS = [
   { id: "dark",   hex: "#1f2937", label: "Графит" },
   { id: "red",    hex: "#dc2626", label: "Красный" },
   { id: "orange", hex: "#f97316", label: "Оранжевый" },
   { id: "green",  hex: "#16a34a", label: "Зелёный" },
   { id: "cream",  hex: "#f5f5f0", label: "Крафт" },
+] as const;
+
+const DESIGN_SKINS = [
+  { id: "none",      label: "Без рисунка, однотонный", image: null },
+  { id: "snezhnie",  label: "«Снежные грёзы»",          image: "/products/snezhnie/pattern-tree.webp" },
+  { id: "mandarin",  label: "«Мандариновая сказка»",    image: "/products/mandarinka/design-mandarinka.webp" },
+  { id: "gold",      label: "Christmas Gold",            image: "/products/newyear/ny-003.webp" },
+  { id: "winter",    label: "«Зимняя сказка»",           image: "/products/newyear/ny-001.webp" },
 ] as const;
 
 const SCALE_REFS = [
@@ -67,14 +101,39 @@ function ScaleRefIcon({ icon }: { icon: string }) {
   );
 }
 
+function SwatchRow<T extends { id: string; label: string }>({
+  title, options, value, onChange,
+}: { title: string; options: readonly T[]; value: T; onChange: (v: T) => void }) {
+  return (
+    <div>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">{title}</p>
+      <div className="flex flex-wrap gap-1.5">
+        {options.map(opt => (
+          <button key={opt.id} onClick={() => onChange(opt)}
+            className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${
+              value.id === opt.id ? "bg-orange-500 text-white" : "border border-gray-200 text-gray-600 hover:border-orange-300"
+            }`}>
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function ConstructorPage() {
   const { user } = useAuth();
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [size, setSize] = useState<typeof SIZES[number]>(SIZES[2]);
+  const [shape, setShape] = useState<typeof SHAPES[number]>(SHAPES[0]);
+  const [material, setMaterial] = useState<typeof MATERIALS[number]>(MATERIALS[0]);
+  const [handle, setHandle] = useState<typeof HANDLES[number]>(HANDLES[0]);
   const [color, setColor] = useState<typeof COLORS[number]>(COLORS[0]);
+  const [skin, setSkin] = useState<typeof DESIGN_SKINS[number]>(DESIGN_SKINS[0]);
   const [logo, setLogo] = useState<string | null>(null);
+  const [logoPos, setLogoPos] = useState<typeof LOGO_POSITIONS[number]>(LOGO_POSITIONS[0]);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -100,7 +159,11 @@ export default function ConstructorPage() {
         credentials: "include",
         body: JSON.stringify({
           size: size.id,
+          shape: shape.label,
+          material: material.label,
+          handle: handle.label,
           color: color.label,
+          design: skin.label,
           hasLogo: !!logo,
         }),
       });
@@ -116,12 +179,20 @@ export default function ConstructorPage() {
   const refIndex = size.id === "S" ? 0 : size.id === "M" ? 0 : size.id === "L" ? 1 : size.id === "XL" ? 2 : 3;
   const activeRef = SCALE_REFS[refIndex];
 
+  const baseW = 140 * shape.widthRatio;
+  const svgW = baseW * size.scale;
+  const svgH = 190 * size.scale;
+  const bodyLeft = 15 * shape.widthRatio;
+  const bodyRight = baseW - 15 * shape.widthRatio;
+  const logoBoxW = Math.min(40, baseW * 0.3);
+  const logoBoxX = (baseW - logoBoxW) / 2;
+
   return (
     <div className="container py-8">
       <span className="chip">Конструктор</span>
       <h1 className="heading mt-3 text-3xl">Визуализация фирменного пакета</h1>
       <p className="mt-2 max-w-2xl text-sm text-gray-500">
-        Выберите размер и цвет, загрузите логотип — и сразу увидите, как будет смотреться брендированная партия.
+        Соберите пакет из формы, материала, цвета или готового дизайна коллекции и своего логотипа — и сразу увидите, как будет смотреться партия.
         Это визуализация для понимания внешнего вида, а не готовый макет для печати — финальные файлы готовит наш дизайнер после согласования.
       </p>
 
@@ -131,34 +202,49 @@ export default function ConstructorPage() {
           <p className="mt-2 text-sm text-gray-500">Менеджер свяжется с вами, чтобы обсудить тираж брендированной партии.</p>
         </div>
       ) : (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
+        <div className="mt-6 grid gap-6 lg:grid-cols-[300px_1fr]">
           <div className="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-            <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Цвет пакета</p>
-              <div className="flex gap-2">
-                {COLORS.map(c => (
-                  <button key={c.id} onClick={() => setColor(c)}
-                    title={c.label}
-                    className={`h-8 w-8 rounded-full border-2 transition ${color.id === c.id ? "border-gray-900 scale-110" : "border-transparent"}`}
-                    style={{ backgroundColor: c.hex, boxShadow: c.id === "cream" ? "inset 0 0 0 1px #e5e7eb" : undefined }} />
-                ))}
-              </div>
-            </div>
+            <SwatchRow title="Размер" options={SIZES} value={size} onChange={setSize} />
+            <p className="-mt-3 text-[11px] text-gray-400">{size.dims}</p>
+
+            <SwatchRow title="Форма" options={SHAPES} value={shape} onChange={setShape} />
+            <SwatchRow title="Материал" options={MATERIALS} value={material} onChange={setMaterial} />
+            <SwatchRow title="Ручка" options={HANDLES} value={handle} onChange={setHandle} />
 
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Размер</p>
-              <div className="flex flex-wrap gap-1.5">
-                {SIZES.map(s => (
-                  <button key={s.id} onClick={() => setSize(s)}
-                    className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${
-                      size.id === s.id ? "bg-orange-500 text-white" : "border border-gray-200 text-gray-600 hover:border-orange-300"
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Готовый дизайн коллекции</p>
+              <div className="grid grid-cols-3 gap-1.5">
+                {DESIGN_SKINS.map(d => (
+                  <button key={d.id} onClick={() => setSkin(d)} title={d.label}
+                    className={`flex aspect-square items-center justify-center overflow-hidden rounded-lg border-2 transition ${
+                      skin.id === d.id ? "border-orange-500" : "border-gray-100 hover:border-gray-300"
                     }`}>
-                    {s.label}
+                    {d.image ? (
+                      <div className="relative h-full w-full">
+                        <Image src={d.image} alt={d.label} fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <span className="text-[9px] text-gray-400">Без узора</span>
+                    )}
                   </button>
                 ))}
               </div>
-              <p className="mt-1.5 text-[11px] text-gray-400">{size.dims}</p>
+              <p className="mt-1.5 text-[11px] text-gray-400">{skin.label}</p>
             </div>
+
+            {skin.id === "none" && (
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Цвет пакета</p>
+                <div className="flex gap-2">
+                  {COLORS.map(c => (
+                    <button key={c.id} onClick={() => setColor(c)}
+                      title={c.label}
+                      className={`h-8 w-8 rounded-full border-2 transition ${color.id === c.id ? "border-gray-900 scale-110" : "border-transparent"}`}
+                      style={{ backgroundColor: c.hex, boxShadow: c.id === "cream" ? "inset 0 0 0 1px #e5e7eb" : undefined }} />
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Ваш логотип</p>
@@ -168,9 +254,14 @@ export default function ConstructorPage() {
                 {logo ? "Заменить файл" : "Загрузить файл"}
               </button>
               {logo && (
-                <button onClick={() => setLogo(null)} className="mt-1.5 text-xs text-gray-400 hover:text-red-500">
-                  Убрать логотип
-                </button>
+                <>
+                  <button onClick={() => setLogo(null)} className="mt-1.5 text-xs text-gray-400 hover:text-red-500">
+                    Убрать логотип
+                  </button>
+                  <div className="mt-3">
+                    <SwatchRow title="Размещение лого" options={LOGO_POSITIONS} value={logoPos} onChange={setLogoPos} />
+                  </div>
+                </>
               )}
             </div>
 
@@ -182,35 +273,89 @@ export default function ConstructorPage() {
           </div>
 
           <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 p-8">
-            <div className="flex flex-1 items-end justify-center gap-10">
+            <div className="flex flex-1 items-end justify-center gap-10 overflow-x-auto">
               <div className="flex flex-col items-center">
-                <svg width={140 * size.scale} height={190 * size.scale} viewBox="0 0 140 190">
-                  <path d="M15 50 L125 50 L118 180 L22 180 Z" fill={color.hex} />
-                  <rect x="15" y="50" width="110" height="14" fill="#000" opacity="0.15" />
-                  <path d="M45 50 C45 30 95 30 95 50" fill="none" stroke={color.hex} strokeWidth="6" />
+                <svg width={svgW} height={svgH} viewBox={`0 0 ${baseW} 190`}>
+                  <defs>
+                    <clipPath id="bagClip">
+                      <path d={`M${bodyLeft} 50 L${bodyRight} 50 L${bodyRight - 7} 180 L${bodyLeft + 7} 180 Z`} />
+                    </clipPath>
+                    {logo && (
+                      <clipPath id="logoClip">
+                        {logoPos.id === "corner" ? (
+                          <rect x={bodyLeft + 8} y={58} width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" />
+                        ) : (
+                          <rect x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW} rx="4" />
+                        )}
+                      </clipPath>
+                    )}
+                  </defs>
+
+                  <path d={`M${bodyLeft} 50 L${bodyRight} 50 L${bodyRight - 7} 180 L${bodyLeft + 7} 180 Z`}
+                    fill={skin.image ? "#e5e7eb" : color.hex} />
+
+                  {skin.image && (
+                    <image href={skin.image} x={bodyLeft - 10} y="44" width={bodyRight - bodyLeft + 20} height="142"
+                      clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" />
+                  )}
+
+                  <rect x={bodyLeft} y="50" width={bodyRight - bodyLeft} height="14" fill="#000" opacity="0.12" />
+
+                  {material.sheen > 0 && (
+                    <rect x={bodyLeft} y="50" width={(bodyRight - bodyLeft) * 0.35} height="130"
+                      fill="#fff" opacity={material.sheen} clipPath="url(#bagClip)" />
+                  )}
+
+                  {handle.id === "cord" && (
+                    <path d={`M${baseW * 0.32} 50 C${baseW * 0.32} 30 ${baseW * 0.68} 30 ${baseW * 0.68} 50`}
+                      fill="none" stroke={skin.image ? "#92400e" : color.hex} strokeWidth="6" />
+                  )}
+                  {handle.id === "ribbon" && (
+                    <path d={`M${baseW * 0.32} 50 C${baseW * 0.32} 32 ${baseW * 0.68} 32 ${baseW * 0.68} 50`}
+                      fill="none" stroke="#dc2626" strokeWidth="9" strokeDasharray="2 3" />
+                  )}
+
                   {logo ? (
-                    <>
-                      <clipPath id="logoClip"><rect x="50" y="90" width="40" height="40" rx="4" /></clipPath>
-                      <rect x="50" y="90" width="40" height="40" rx="4" fill="#fff" />
-                      <image href={logo} x="52" y="92" width="36" height="36" clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
-                    </>
+                    logoPos.id === "repeat" ? (
+                      <>
+                        {[0, 1, 2].map(i => (
+                          <image key={i} href={logo}
+                            x={bodyLeft + 10 + i * (logoBoxW * 0.55)} y="70" width={logoBoxW * 0.4} height={logoBoxW * 0.4}
+                            clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" opacity="0.95" />
+                        ))}
+                      </>
+                    ) : logoPos.id === "corner" ? (
+                      <>
+                        <rect x={bodyLeft + 8} y="58" width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={bodyLeft + 8} y="58" width={logoBoxW * 0.7} height={logoBoxW * 0.7}
+                          clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
+                      </>
+                    ) : (
+                      <>
+                        <rect x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW}
+                          clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
+                      </>
+                    )
                   ) : (
-                    <>
-                      <rect x="55" y="95" width="30" height="30" rx="4" fill="#ffffff" opacity="0.9" />
-                      <text x="70" y="113" fontSize="9" fill="#999" textAnchor="middle">LOGO</text>
-                    </>
+                    !skin.image && (
+                      <>
+                        <rect x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW} rx="4" fill="#ffffff" opacity="0.9" />
+                        <text x={baseW / 2} y="98" fontSize="9" fill="#999" textAnchor="middle">LOGO</text>
+                      </>
+                    )
                   )}
                 </svg>
-                <span className="mt-2 text-xs font-semibold text-gray-700">Пакет ({size.label})</span>
+                <span className="mt-2 text-xs font-semibold text-gray-700">Пакет ({size.label}, {shape.label.toLowerCase()})</span>
               </div>
 
-              <div className="flex flex-col items-center text-gray-300">
+              <div className="flex shrink-0 flex-col items-center text-gray-300">
                 <ScaleRefIcon icon={activeRef.icon} />
                 <span className="mt-2 text-xs text-gray-400">{activeRef.name}</span>
               </div>
             </div>
             <p className="mt-4 text-center text-[11px] text-gray-400">
-              Визуализация приблизительная — финальный вид зависит от способа нанесения логотипа
+              Визуализация приблизительная — финальный вид зависит от способа нанесения логотипа и материала
             </p>
           </div>
         </div>

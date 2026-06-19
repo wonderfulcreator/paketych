@@ -8,6 +8,7 @@ import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/Skeletons";
 import { EmptyState, EmptyIcons } from "@/components/EmptyState";
+import { ShelfShowcase } from "@/components/ShelfShowcase";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -80,6 +81,7 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
   const [selColors,     setSelColors]     = useState<string[]>([]);
   const [sort,          setSort]          = useState("popular");
   const [isLoading,     setIsLoading]     = useState(true);
+  const [viewMode,      setViewMode]      = useState<"grid" | "shelf">("grid");
 
   useEffect(() => {
     const t = setTimeout(() => setIsLoading(false), 450);
@@ -245,6 +247,16 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
               )}
             </button>
             <div className="ml-auto flex items-center gap-2">
+              <div className="flex items-center gap-0.5 rounded-xl border border-gray-200 bg-white p-0.5">
+                <button onClick={() => setViewMode("grid")}
+                  className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${viewMode === "grid" ? "bg-gray-900 text-white" : "text-gray-500 hover:text-gray-900"}`}>
+                  Сетка
+                </button>
+                <button onClick={() => setViewMode("shelf")}
+                  className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${viewMode === "shelf" ? "bg-gray-900 text-white" : "text-gray-500 hover:text-gray-900"}`}>
+                  Витрина
+                </button>
+              </div>
               <span className="hidden text-sm text-gray-400 sm:block">Сортировка:</span>
               <select value={sort} onChange={e => setSort(e.target.value)}
                 className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-orange-400">
@@ -310,6 +322,8 @@ function CatalogInner({ products, collections, themes, sizes }: Props) {
               actionLabel="Сбросить фильтры"
               onAction={() => { setSelSizes([]); setSelCols([]); setSelThemes([]); setSelColors([]); setOnlySale(false); setOnlyNew(false); setQuery(""); setVisible(24); }}
             />
+          ) : viewMode === "shelf" ? (
+            <ShelfShowcase products={filtered} />
           ) : (
             <>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
