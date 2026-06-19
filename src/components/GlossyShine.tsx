@@ -21,7 +21,7 @@ export function GlossyShine({ children, className }: { children: React.ReactNode
   }
 
   return (
-    <div ref={ref} className={`relative ${className ?? ""}`}
+    <div ref={ref} className={className} style={{ position: "relative" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setPos(null)}>
       {children}
