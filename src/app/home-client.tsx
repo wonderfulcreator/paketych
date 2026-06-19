@@ -212,7 +212,7 @@ export function HomeClient({ featured, fresh }: { featured: Product[]; fresh: Pr
           </span>
         </Link>
 
-        <Link href="/constructor"
+        <Link href="/bag-constructor"
           className="mt-3 flex flex-col items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-white px-6 py-5 text-center shadow-sm sm:flex-row sm:text-left">
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-orange-600">

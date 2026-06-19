@@ -94,7 +94,7 @@ export default function ConstructorPage() {
     setSubmitting(true);
     playClickSound();
     try {
-      await fetch("/api/constructor-request", {
+      await fetch("/api/bag-constructor-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
