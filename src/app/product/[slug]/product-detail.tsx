@@ -13,6 +13,8 @@ import { ProductCard } from "@/components/ProductCard";
 import { RecentlyViewed, useRecentlyViewed } from "@/components/RecentlyViewed";
 import { Lightbox } from "@/components/Lightbox";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
+import { SizeComparison } from "@/components/SizeComparison";
+import { EcoBadge, isEcoProduct } from "@/components/EcoBadge";
 
 export function ProductDetail({ product, related }: { product: Product; related: Product[] }) {
   const router = useRouter();
@@ -187,6 +189,7 @@ export function ProductDetail({ product, related }: { product: Product; related:
                   {restockSubscribed ? "Сообщим о поступлении ✓" : "Сообщить о поступлении"}
                 </button>
               )}
+              {isEcoProduct(product.material) && <EcoBadge />}
             </div>
           )}
 
@@ -267,6 +270,10 @@ export function ProductDetail({ product, related }: { product: Product; related:
                 </div>
               ))}
             </dl>
+          </div>
+
+          <div className="mt-4">
+            <SizeComparison dimensions={product.dimensions} />
           </div>
         </div>
       </div>

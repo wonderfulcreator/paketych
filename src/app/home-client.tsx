@@ -196,6 +196,37 @@ export function HomeClient({ featured, fresh }: { featured: Product[]; fresh: Pr
         </div>
       </section>
 
+      {/* ГОЛОСОВАНИЕ ЗА ДИЗАЙН ────────────────────────────────── */}
+      <section className="container mt-10">
+        <Link href="/vote"
+          className="flex flex-col items-center justify-between gap-4 rounded-2xl bg-gray-900 px-6 py-5 text-center sm:flex-row sm:text-left">
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-orange-300">
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h4M9 11l3-9 3 9M9 11v11M15 11h4a2 2 0 0 1 2 2v3"/></svg>
+              Голосование
+            </span>
+            <p className="mt-2 font-display text-lg font-bold text-white">Выберите следующий дизайн «Мандариновой сказки»</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600">
+            Проголосовать
+          </span>
+        </Link>
+
+        <Link href="/constructor"
+          className="mt-3 flex flex-col items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-white px-6 py-5 text-center shadow-sm sm:flex-row sm:text-left">
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-orange-600">
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              Конструктор
+            </span>
+            <p className="mt-2 font-display text-lg font-bold text-gray-900">Соберите фирменный пакет с вашим логотипом</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-gray-900 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-gray-700">
+            Открыть конструктор
+          </span>
+        </Link>
+      </section>
+
       {/* КОЛЛЕКЦИИ — 6 параллакс-шторок ────────────────────────── */}
       <section className="container mt-10">
         <div className="mb-5">

@@ -12,6 +12,7 @@ import { useStore } from "@/providers/StoreProvider";
 import { useCompare } from "@/providers/CompareProvider";
 import { useToast } from "@/providers/ToastProvider";
 import { playClickSound, vibrate } from "@/lib/feedback";
+import { EcoBadge, isEcoProduct } from "@/components/EcoBadge";
 
 /* ── анимация «полёта» в корзину ─────────────────────────────────── */
 function FlyParticle({ onDone }: { onDone: () => void }) {
@@ -91,22 +92,29 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           />
 
           {/* Бейджи */}
-          <div className="absolute left-2 top-2 flex flex-col gap-1">
+          <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
             {product.isNew && (
               <span className="gradient-shimmer-border">
-                <span className="block rounded-full bg-green-500 px-2 py-0.5 text-[11px] font-bold text-white">Новинка</span>
+                <span className="flex items-center gap-1 rounded-full bg-gray-900 px-2.5 py-1 text-[11px] font-bold text-white">
+                  <svg className="h-3 w-3 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5L12 2Z"/></svg>
+                  Новинка
+                </span>
               </span>
             )}
             {product.isSale && product.salePrice && (
-              <span className="rounded-full bg-red-500 px-2 py-0.5 text-[11px] font-bold text-white shadow-sm">
+              <span className="rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
                 −{discountPercent(product.basePrice, product.salePrice)}%
               </span>
             )}
             {product.isHit && !product.isNew && (
               <span className="gradient-shimmer-border">
-                <span className="block rounded-full bg-orange-400 px-2 py-0.5 text-[11px] font-bold text-white">Хит</span>
+                <span className="flex items-center gap-1 rounded-full bg-gray-900 px-2.5 py-1 text-[11px] font-bold text-white">
+                  <svg className="h-3 w-3 text-orange-400" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 11-13h-7l1-7Z"/></svg>
+                  Хит
+                </span>
               </span>
             )}
+            {isEcoProduct(product.material) && <EcoBadge />}
           </div>
 
           {/* Избранное */}
