@@ -7,11 +7,21 @@ export function isGlossyMaterial(material: string): boolean {
   return m.includes("тиснение") || m.includes("люкс") || m.includes("ламинирован");
 }
 
-export function GlossyShine({ children, className }: { children: React.ReactNode; className?: string }) {
+type GlossyShineProps = {
+  children: React.ReactNode;
+  className?: string;
+  /** Если false — компонент просто рендерит детей без какого-либо эффекта.
+   *  Структура DOM остаётся одинаковой независимо от active, чтобы не было
+   *  расхождений в дереве React между глянцевыми и обычными товарами. */
+  active?: boolean;
+};
+
+export function GlossyShine({ children, className, active = true }: GlossyShineProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!active) return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -22,19 +32,21 @@ export function GlossyShine({ children, className }: { children: React.ReactNode
 
   return (
     <div ref={ref} className={className} style={{ position: "relative" }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => setPos(null)}>
+      onMouseMove={active ? handleMouseMove : undefined}
+      onMouseLeave={active ? () => setPos(null) : undefined}>
       {children}
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-200"
-        style={{
-          opacity: pos ? 1 : 0,
-          background: pos
-            ? `radial-gradient(circle 90px at ${pos.x}% ${pos.y}%, rgba(255,255,255,0.45), transparent 70%)`
-            : undefined,
-          mixBlendMode: "overlay",
-        }}
-      />
+      {active && (
+        <div
+          className="pointer-events-none absolute inset-0 transition-opacity duration-200"
+          style={{
+            opacity: pos ? 1 : 0,
+            background: pos
+              ? `radial-gradient(circle 90px at ${pos.x}% ${pos.y}%, rgba(255,255,255,0.45), transparent 70%)`
+              : undefined,
+            mixBlendMode: "overlay",
+          }}
+        />
+      )}
     </div>
   );
 }

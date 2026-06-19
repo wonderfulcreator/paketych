@@ -100,23 +100,14 @@ export function ProductDetail({ product, related }: { product: Product; related:
             className="group relative aspect-square cursor-zoom-in overflow-hidden rounded-2xl border border-gray-100 bg-gray-50"
             onClick={() => setLightbox(true)}
           >
-            {isGlossyMaterial(product.material) ? (
-              <GlossyShine className="absolute inset-0">
-                <Image
-                  src={images[active]} alt={product.title} fill
-                  sizes="(max-width:1024px) 100vw, 50vw"
-                  className="object-contain p-6 transition duration-500 group-hover:scale-105"
-                  priority
-                />
-              </GlossyShine>
-            ) : (
+            <GlossyShine className="absolute inset-0" active={isGlossyMaterial(product.material)}>
               <Image
                 src={images[active]} alt={product.title} fill
                 sizes="(max-width:1024px) 100vw, 50vw"
                 className="object-contain p-6 transition duration-500 group-hover:scale-105"
                 priority
               />
-            )}
+            </GlossyShine>
             {/* Иконка лупы */}
             <div className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-gray-400 opacity-0 shadow-sm backdrop-blur transition group-hover:opacity-100">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

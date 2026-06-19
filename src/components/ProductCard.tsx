@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product } from "@/lib/types";
 import { cn, formatPrice, discountPercent } from "@/lib/utils";
@@ -38,6 +38,15 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const { showToast } = useToast();
   const [flying, setFlying] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
+
+  // Подстраховка: если изображение уже в кэше браузера, событие onLoad у next/image
+  // иногда срабатывает до того, как React успевает подписать обработчик — в этом
+  // случае imgLoaded мог бы навсегда остаться false, и фото будет скрыто прозрачностью.
+  // Таймер гарантирует, что фото в любом случае станет видимым.
+  useEffect(() => {
+    const t = setTimeout(() => setImgLoaded(true), 700);
+    return () => clearTimeout(t);
+  }, []);
   const fav = isFavorite(product.id);
 
   const existing = request.find(r => r.productId === product.id);
@@ -83,19 +92,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
         {/* Фото */}
         <Link href={`/product/${product.slug}`}
           className="relative block overflow-hidden bg-gray-50" style={{ aspectRatio: "1/1" }}>
-          {isGlossy ? (
-            <GlossyShine className="absolute inset-0">
-              <Image src={img} alt={product.title} fill
-                sizes="(max-width:768px) 50vw, 25vw"
-                className={cn(
-                  "object-contain p-4 transition-all duration-500 ease-[cubic-bezier(.34,1.56,.64,1)]",
-                  "group-hover:scale-105 group-hover:-translate-y-1 group-hover:-rotate-2",
-                  imgLoaded ? "opacity-100 blur-0 scale-100" : "opacity-0 blur-md scale-105"
-                )}
-                onLoad={() => setImgLoaded(true)}
-              />
-            </GlossyShine>
-          ) : (
+          <GlossyShine className="absolute inset-0" active={isGlossy}>
             <Image src={img} alt={product.title} fill
               sizes="(max-width:768px) 50vw, 25vw"
               className={cn(
@@ -104,8 +101,9 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
                 imgLoaded ? "opacity-100 blur-0 scale-100" : "opacity-0 blur-md scale-105"
               )}
               onLoad={() => setImgLoaded(true)}
+              onLoadingComplete={() => setImgLoaded(true)}
             />
-          )}
+          </GlossyShine>
 
           {/* Бейджи */}
           <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
