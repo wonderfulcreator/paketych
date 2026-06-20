@@ -8,12 +8,12 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 const MANAGER_EMAIL = process.env.MANAGER_EMAIL || "o.vanukova@interteks.ru";
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Пакет Пакетыч <orders@paketpaketych.ru>";
 
-// POST /api/bag-constructor-request { size, shape, material, handle, color, design, hasLogo }
+// POST /api/bag-constructor-request { size, shape, material, handle, finish, color, design, hasLogo }
 // Принимает заявку из визуального конструктора фирменного пакета.
 // Это не настоящий заказ — просьба связаться для обсуждения брендирования.
 export async function POST(req: NextRequest) {
   try {
-    const { size, shape, material, handle, color, design, hasLogo } = await req.json();
+    const { size, shape, material, handle, finish, color, design, hasLogo } = await req.json();
 
     let contact = "Гость (без входа)";
     const sessionId = getSessionCookie();
@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
             <li><b>Размер:</b> ${size}</li>
             <li><b>Форма:</b> ${shape ?? "—"}</li>
             <li><b>Материал:</b> ${material ?? "—"}</li>
+            <li><b>Отделка:</b> ${finish ?? "—"}</li>
             <li><b>Ручка:</b> ${handle ?? "—"}</li>
             <li><b>Дизайн:</b> ${design ?? "—"}</li>
             <li><b>Цвет (если без дизайна):</b> ${color ?? "—"}</li>
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
         `,
       });
     } else {
-      console.log("[bag-constructor-request] RESEND_API_KEY not set, skipping email", { size, shape, material, handle, color, design, hasLogo, contact });
+      console.log("[bag-constructor-request] RESEND_API_KEY not set, skipping email", { size, shape, material, handle, finish, color, design, hasLogo, contact });
     }
 
     return NextResponse.json({ ok: true });

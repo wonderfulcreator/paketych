@@ -7,17 +7,18 @@ import { useToast } from "@/providers/ToastProvider";
 import { playClickSound, playSuccessSound } from "@/lib/feedback";
 
 const SIZES = [
-  { id: "S",   label: "S",   dims: "200×200×100 мм", scale: 0.5 },
-  { id: "M",   label: "M",   dims: "230×260×100 мм", scale: 0.62 },
-  { id: "L",   label: "L",   dims: "280×330×120 мм", scale: 0.72 },
+  { id: "S",   label: "S",   dims: "200×200×100 мм", scale: 0.46 },
+  { id: "M",   label: "M",   dims: "230×260×100 мм", scale: 0.58 },
+  { id: "L",   label: "L",   dims: "280×330×120 мм", scale: 0.7 },
   { id: "XL",  label: "XL",  dims: "150×360×120 мм", scale: 0.78 },
-  { id: "XXL", label: "XXL", dims: "560×410×240 мм", scale: 1.05 },
+  { id: "XXL", label: "XXL", dims: "560×410×240 мм", scale: 1 },
 ] as const;
 
 const SHAPES = [
   { id: "standard", label: "Стандартный", widthRatio: 1 },
   { id: "narrow",   label: "Узкий",       widthRatio: 0.62 },
   { id: "wide",     label: "Широкий",     widthRatio: 1.35 },
+  { id: "square",   label: "Квадратный",  widthRatio: 1.05 },
 ] as const;
 
 const MATERIALS = [
@@ -25,34 +26,53 @@ const MATERIALS = [
   { id: "kraft",      label: "Крафт",                  sheen: 0 },
   { id: "matte",       label: "Мелованная бумага",     sheen: 0.06 },
   { id: "lux",         label: "Люкс с тиснением",       sheen: 0.32 },
+  { id: "textile",     label: "Текстиль",               sheen: 0.02 },
 ] as const;
 
 const HANDLES = [
   { id: "cord",   label: "Крученый шнур" },
   { id: "ribbon", label: "Лента" },
+  { id: "flat",   label: "Плоская ручка" },
   { id: "none",   label: "Без ручки" },
+] as const;
+
+const FINISHES = [
+  { id: "full-color", label: "Полноцветная печать" },
+  { id: "foil",       label: "Тиснение фольгой" },
+  { id: "embossed",    label: "Конгрев (без цвета)" },
 ] as const;
 
 const LOGO_POSITIONS = [
   { id: "center", label: "По центру" },
   { id: "corner",  label: "В углу" },
   { id: "repeat",  label: "Повтором" },
+  { id: "bottom",  label: "Внизу" },
 ] as const;
 
 const COLORS = [
-  { id: "dark",   hex: "#1f2937", label: "Графит" },
-  { id: "red",    hex: "#dc2626", label: "Красный" },
-  { id: "orange", hex: "#f97316", label: "Оранжевый" },
-  { id: "green",  hex: "#16a34a", label: "Зелёный" },
-  { id: "cream",  hex: "#f5f5f0", label: "Крафт" },
+  { id: "dark",    hex: "#1f2937", label: "Графит" },
+  { id: "red",     hex: "#dc2626", label: "Красный" },
+  { id: "orange",  hex: "#f97316", label: "Оранжевый" },
+  { id: "green",   hex: "#16a34a", label: "Зелёный" },
+  { id: "blue",    hex: "#2563eb", label: "Синий" },
+  { id: "purple",  hex: "#7c3aed", label: "Фиолетовый" },
+  { id: "pink",    hex: "#db2777", label: "Розовый" },
+  { id: "cream",   hex: "#f5f5f0", label: "Крафт" },
+  { id: "white",   hex: "#ffffff", label: "Белый" },
 ] as const;
 
 const DESIGN_SKINS = [
-  { id: "none",      label: "Без рисунка, однотонный", image: null },
-  { id: "snezhnie",  label: "«Снежные грёзы»",          image: "/products/snezhnie/pattern-tree.webp" },
-  { id: "mandarin",  label: "«Мандариновая сказка»",    image: "/products/mandarinka/design-mandarinka.webp" },
-  { id: "gold",      label: "Christmas Gold",            image: "/products/newyear/ny-003.webp" },
-  { id: "winter",    label: "«Зимняя сказка»",           image: "/products/newyear/ny-001.webp" },
+  { id: "none",        label: "Без рисунка",               image: null },
+  { id: "snezh-tree",  label: "Снежные грёзы — Ёлка",       image: "/products/snezhnie/design-tree.webp" },
+  { id: "snezh-diam",  label: "Снежные грёзы — Ромб",       image: "/products/snezhnie/design-diamond.webp" },
+  { id: "mand-classic",label: "Мандариновая — С Новым годом", image: "/products/mandarinka/design-mandarinka.webp" },
+  { id: "mand-family", label: "Мандариновая — Семейный праздник", image: "/products/mandarinka/design-family.webp" },
+  { id: "winter-1",    label: "Зимняя сказка — Эскиз 1",    image: "/products/newyear/ny-001.webp" },
+  { id: "winter-2",    label: "Зимняя сказка — Эскиз 2",    image: "/products/newyear/ny-002.webp" },
+  { id: "winter-4",    label: "Зимняя сказка — Эскиз 4",    image: "/products/newyear/ny-004.webp" },
+  { id: "gold-1",      label: "Christmas Gold — Эскиз 3",   image: "/products/newyear/ny-003.webp" },
+  { id: "gold-2",      label: "Christmas Gold — Эскиз 6",   image: "/products/newyear/ny-006.webp" },
+  { id: "gold-3",      label: "Christmas Gold — Эскиз 9",   image: "/products/newyear/ny-009.webp" },
 ] as const;
 
 const SCALE_REFS = [
@@ -65,7 +85,7 @@ const SCALE_REFS = [
 function ScaleRefIcon({ icon }: { icon: string }) {
   if (icon === "wine") {
     return (
-      <svg width="22" height="64" viewBox="0 0 24 70" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg width="26" height="76" viewBox="0 0 24 70" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M9 2h6v9c0 2.5 2 3.5 2 7v46a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V18c0-3.5 2-4.5 2-7V2Z" />
         <line x1="9" y1="2" x2="15" y2="2" />
       </svg>
@@ -73,7 +93,7 @@ function ScaleRefIcon({ icon }: { icon: string }) {
   }
   if (icon === "shoebox") {
     return (
-      <svg width="56" height="24" viewBox="0 0 60 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg width="68" height="29" viewBox="0 0 60 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="2" y="6" width="56" height="16" rx="1" />
         <path d="M2 6 8 2h44l6 4" />
       </svg>
@@ -81,7 +101,7 @@ function ScaleRefIcon({ icon }: { icon: string }) {
   }
   if (icon === "guitar") {
     return (
-      <svg width="36" height="108" viewBox="0 0 50 150" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg width="42" height="128" viewBox="0 0 50 150" fill="none" stroke="currentColor" strokeWidth="2">
         <ellipse cx="20" cy="105" rx="16" ry="20" />
         <line x1="20" y1="70" x2="20" y2="2" />
         <line x1="14" y1="123" x2="8" y2="148" />
@@ -90,7 +110,7 @@ function ScaleRefIcon({ icon }: { icon: string }) {
     );
   }
   return (
-    <svg width="120" height="78" viewBox="0 0 200 130" fill="none" stroke="currentColor" strokeWidth="3">
+    <svg width="140" height="91" viewBox="0 0 200 130" fill="none" stroke="currentColor" strokeWidth="3">
       <circle cx="40" cy="95" r="30" />
       <circle cx="160" cy="95" r="30" />
       <line x1="40" y1="95" x2="100" y2="40" />
@@ -130,6 +150,7 @@ export default function ConstructorPage() {
   const [shape, setShape] = useState<typeof SHAPES[number]>(SHAPES[0]);
   const [material, setMaterial] = useState<typeof MATERIALS[number]>(MATERIALS[0]);
   const [handle, setHandle] = useState<typeof HANDLES[number]>(HANDLES[0]);
+  const [finish, setFinish] = useState<typeof FINISHES[number]>(FINISHES[0]);
   const [color, setColor] = useState<typeof COLORS[number]>(COLORS[0]);
   const [skin, setSkin] = useState<typeof DESIGN_SKINS[number]>(DESIGN_SKINS[0]);
   const [logo, setLogo] = useState<string | null>(null);
@@ -162,6 +183,7 @@ export default function ConstructorPage() {
           shape: shape.label,
           material: material.label,
           handle: handle.label,
+          finish: finish.label,
           color: color.label,
           design: skin.label,
           hasLogo: !!logo,
@@ -179,12 +201,13 @@ export default function ConstructorPage() {
   const refIndex = size.id === "S" ? 0 : size.id === "M" ? 0 : size.id === "L" ? 1 : size.id === "XL" ? 2 : 3;
   const activeRef = SCALE_REFS[refIndex];
 
-  const baseW = 140 * shape.widthRatio;
-  const svgW = baseW * size.scale;
-  const svgH = 190 * size.scale;
-  const bodyLeft = 15 * shape.widthRatio;
-  const bodyRight = baseW - 15 * shape.widthRatio;
-  const logoBoxW = Math.min(40, baseW * 0.3);
+  const baseW = 160 * shape.widthRatio;
+  const baseH = 230;
+  const svgW = baseW * size.scale * 1.5;
+  const svgH = baseH * size.scale * 1.5;
+  const bodyLeft = 18 * shape.widthRatio;
+  const bodyRight = baseW - 18 * shape.widthRatio;
+  const logoBoxW = Math.min(46, baseW * 0.3);
   const logoBoxX = (baseW - logoBoxW) / 2;
 
   return (
@@ -192,7 +215,7 @@ export default function ConstructorPage() {
       <span className="chip">Конструктор</span>
       <h1 className="heading mt-3 text-3xl">Визуализация фирменного пакета</h1>
       <p className="mt-2 max-w-2xl text-sm text-gray-500">
-        Соберите пакет из формы, материала, цвета или готового дизайна коллекции и своего логотипа — и сразу увидите, как будет смотреться партия.
+        Соберите пакет из формы, материала, отделки, цвета или готового дизайна коллекции и своего логотипа — и сразу увидите, как будет смотреться партия.
         Это визуализация для понимания внешнего вида, а не готовый макет для печати — финальные файлы готовит наш дизайнер после согласования.
       </p>
 
@@ -202,18 +225,131 @@ export default function ConstructorPage() {
           <p className="mt-2 text-sm text-gray-500">Менеджер свяжется с вами, чтобы обсудить тираж брендированной партии.</p>
         </div>
       ) : (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[300px_1fr]">
-          <div className="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
+          <div className="order-1 flex min-h-[460px] flex-col items-center justify-center rounded-2xl bg-gray-50 p-8 lg:order-1 lg:min-h-[600px]">
+            <div className="flex flex-1 items-center justify-center gap-12">
+              <div className="flex flex-col items-center">
+                <svg width={svgW} height={svgH} viewBox={`0 0 ${baseW} ${baseH}`} className="drop-shadow-xl">
+                  <defs>
+                    <clipPath id="bagClip">
+                      <path d={`M${bodyLeft} 60 L${bodyRight} 60 L${bodyRight - 9} ${baseH - 10} L${bodyLeft + 9} ${baseH - 10} Z`} />
+                    </clipPath>
+                    {logo && (
+                      <clipPath id="logoClip">
+                        {logoPos.id === "corner" ? (
+                          <rect x={bodyLeft + 10} y={70} width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" />
+                        ) : logoPos.id === "bottom" ? (
+                          <rect x={logoBoxX} y={baseH - 60} width={logoBoxW} height={logoBoxW} rx="4" />
+                        ) : (
+                          <rect x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW} rx="4" />
+                        )}
+                      </clipPath>
+                    )}
+                    <linearGradient id="foilGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#fff" stopOpacity="0" />
+                      <stop offset="50%" stopColor="#FFD700" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+
+                  <path d={`M${bodyLeft} 60 L${bodyRight} 60 L${bodyRight - 9} ${baseH - 10} L${bodyLeft + 9} ${baseH - 10} Z`}
+                    fill={skin.image ? "#e5e7eb" : color.hex}
+                    stroke={color.id === "white" ? "#e5e7eb" : "none"} strokeWidth="1" />
+
+                  {skin.image && (
+                    <image href={skin.image} x={bodyLeft - 12} y="52" width={bodyRight - bodyLeft + 24} height={baseH - 70}
+                      clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" />
+                  )}
+
+                  <rect x={bodyLeft} y="60" width={bodyRight - bodyLeft} height="16" fill="#000" opacity="0.12" />
+
+                  {material.sheen > 0 && (
+                    <rect x={bodyLeft} y="60" width={(bodyRight - bodyLeft) * 0.35} height={baseH - 80}
+                      fill="#fff" opacity={material.sheen} clipPath="url(#bagClip)" />
+                  )}
+
+                  {finish.id === "foil" && (
+                    <rect x={bodyLeft} y="60" width={bodyRight - bodyLeft} height={baseH - 80}
+                      fill="url(#foilGrad)" opacity="0.25" clipPath="url(#bagClip)" />
+                  )}
+
+                  {handle.id === "cord" && (
+                    <path d={`M${baseW * 0.32} 60 C${baseW * 0.32} 36 ${baseW * 0.68} 36 ${baseW * 0.68} 60`}
+                      fill="none" stroke={skin.image ? "#92400e" : color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="7" />
+                  )}
+                  {handle.id === "ribbon" && (
+                    <path d={`M${baseW * 0.32} 60 C${baseW * 0.32} 38 ${baseW * 0.68} 38 ${baseW * 0.68} 60`}
+                      fill="none" stroke="#dc2626" strokeWidth="10" strokeDasharray="2 3" />
+                  )}
+                  {handle.id === "flat" && (
+                    <path d={`M${baseW * 0.3} 60 L${baseW * 0.3} 44 L${baseW * 0.7} 44 L${baseW * 0.7} 60`}
+                      fill="none" stroke={color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="8" strokeLinecap="round" />
+                  )}
+
+                  {logo ? (
+                    logoPos.id === "repeat" ? (
+                      <>
+                        {[0, 1, 2].map(i => (
+                          <image key={i} href={logo}
+                            x={bodyLeft + 12 + i * (logoBoxW * 0.55)} y={baseH * 0.32} width={logoBoxW * 0.42} height={logoBoxW * 0.42}
+                            clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" opacity="0.95" />
+                        ))}
+                      </>
+                    ) : logoPos.id === "corner" ? (
+                      <>
+                        <rect x={bodyLeft + 10} y="70" width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={bodyLeft + 10} y="70" width={logoBoxW * 0.7} height={logoBoxW * 0.7}
+                          clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
+                      </>
+                    ) : logoPos.id === "bottom" ? (
+                      <>
+                        <rect x={logoBoxX} y={baseH - 60} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={logoBoxX} y={baseH - 60} width={logoBoxW} height={logoBoxW}
+                          clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
+                      </>
+                    ) : (
+                      <>
+                        <rect x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW}
+                          clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
+                      </>
+                    )
+                  ) : (
+                    !skin.image && (
+                      <>
+                        <rect x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW} rx="4" fill="#ffffff" opacity="0.9" />
+                        <text x={baseW / 2} y={baseH * 0.42 + logoBoxW / 2 + 3} fontSize="10" fill="#999" textAnchor="middle">LOGO</text>
+                      </>
+                    )
+                  )}
+                </svg>
+                <span className="mt-4 text-sm font-semibold text-gray-700">
+                  Пакет {size.label} · {shape.label} · {material.label}
+                </span>
+              </div>
+
+              <div className="hidden shrink-0 flex-col items-center text-gray-300 sm:flex">
+                <ScaleRefIcon icon={activeRef.icon} />
+                <span className="mt-2 text-xs text-gray-400">{activeRef.name}</span>
+              </div>
+            </div>
+            <p className="mt-4 text-center text-[11px] text-gray-400">
+              Визуализация приблизительная — финальный вид зависит от способа нанесения логотипа и материала
+            </p>
+          </div>
+
+          <div className="order-2 space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:order-2 lg:max-h-[600px] lg:overflow-y-auto">
             <SwatchRow title="Размер" options={SIZES} value={size} onChange={setSize} />
             <p className="-mt-3 text-[11px] text-gray-400">{size.dims}</p>
 
             <SwatchRow title="Форма" options={SHAPES} value={shape} onChange={setShape} />
             <SwatchRow title="Материал" options={MATERIALS} value={material} onChange={setMaterial} />
+            <SwatchRow title="Отделка" options={FINISHES} value={finish} onChange={setFinish} />
             <SwatchRow title="Ручка" options={HANDLES} value={handle} onChange={setHandle} />
 
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Готовый дизайн коллекции</p>
-              <div className="grid grid-cols-3 gap-1.5">
+              <div className="grid grid-cols-4 gap-1.5">
                 {DESIGN_SKINS.map(d => (
                   <button key={d.id} onClick={() => setSkin(d)} title={d.label}
                     className={`flex aspect-square items-center justify-center overflow-hidden rounded-lg border-2 transition ${
@@ -224,7 +360,7 @@ export default function ConstructorPage() {
                         <Image src={d.image} alt={d.label} fill className="object-cover" />
                       </div>
                     ) : (
-                      <span className="text-[9px] text-gray-400">Без узора</span>
+                      <span className="text-[8px] text-gray-400">Без узора</span>
                     )}
                   </button>
                 ))}
@@ -235,12 +371,12 @@ export default function ConstructorPage() {
             {skin.id === "none" && (
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Цвет пакета</p>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {COLORS.map(c => (
                     <button key={c.id} onClick={() => setColor(c)}
                       title={c.label}
                       className={`h-8 w-8 rounded-full border-2 transition ${color.id === c.id ? "border-gray-900 scale-110" : "border-transparent"}`}
-                      style={{ backgroundColor: c.hex, boxShadow: c.id === "cream" ? "inset 0 0 0 1px #e5e7eb" : undefined }} />
+                      style={{ backgroundColor: c.hex, boxShadow: c.id === "cream" || c.id === "white" ? "inset 0 0 0 1px #e5e7eb" : undefined }} />
                   ))}
                 </div>
               </div>
@@ -270,93 +406,6 @@ export default function ConstructorPage() {
               {submitting ? "Отправляем…" : "Отправить запрос на брендирование"}
             </button>
             {!user && <p className="text-[11px] text-gray-400">Заявку можно отправить и без входа — мы запросим контакты дополнительно.</p>}
-          </div>
-
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 p-8">
-            <div className="flex flex-1 items-end justify-center gap-10 overflow-x-auto">
-              <div className="flex flex-col items-center">
-                <svg width={svgW} height={svgH} viewBox={`0 0 ${baseW} 190`}>
-                  <defs>
-                    <clipPath id="bagClip">
-                      <path d={`M${bodyLeft} 50 L${bodyRight} 50 L${bodyRight - 7} 180 L${bodyLeft + 7} 180 Z`} />
-                    </clipPath>
-                    {logo && (
-                      <clipPath id="logoClip">
-                        {logoPos.id === "corner" ? (
-                          <rect x={bodyLeft + 8} y={58} width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" />
-                        ) : (
-                          <rect x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW} rx="4" />
-                        )}
-                      </clipPath>
-                    )}
-                  </defs>
-
-                  <path d={`M${bodyLeft} 50 L${bodyRight} 50 L${bodyRight - 7} 180 L${bodyLeft + 7} 180 Z`}
-                    fill={skin.image ? "#e5e7eb" : color.hex} />
-
-                  {skin.image && (
-                    <image href={skin.image} x={bodyLeft - 10} y="44" width={bodyRight - bodyLeft + 20} height="142"
-                      clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" />
-                  )}
-
-                  <rect x={bodyLeft} y="50" width={bodyRight - bodyLeft} height="14" fill="#000" opacity="0.12" />
-
-                  {material.sheen > 0 && (
-                    <rect x={bodyLeft} y="50" width={(bodyRight - bodyLeft) * 0.35} height="130"
-                      fill="#fff" opacity={material.sheen} clipPath="url(#bagClip)" />
-                  )}
-
-                  {handle.id === "cord" && (
-                    <path d={`M${baseW * 0.32} 50 C${baseW * 0.32} 30 ${baseW * 0.68} 30 ${baseW * 0.68} 50`}
-                      fill="none" stroke={skin.image ? "#92400e" : color.hex} strokeWidth="6" />
-                  )}
-                  {handle.id === "ribbon" && (
-                    <path d={`M${baseW * 0.32} 50 C${baseW * 0.32} 32 ${baseW * 0.68} 32 ${baseW * 0.68} 50`}
-                      fill="none" stroke="#dc2626" strokeWidth="9" strokeDasharray="2 3" />
-                  )}
-
-                  {logo ? (
-                    logoPos.id === "repeat" ? (
-                      <>
-                        {[0, 1, 2].map(i => (
-                          <image key={i} href={logo}
-                            x={bodyLeft + 10 + i * (logoBoxW * 0.55)} y="70" width={logoBoxW * 0.4} height={logoBoxW * 0.4}
-                            clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" opacity="0.95" />
-                        ))}
-                      </>
-                    ) : logoPos.id === "corner" ? (
-                      <>
-                        <rect x={bodyLeft + 8} y="58" width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" fill="#fff" opacity="0.92" />
-                        <image href={logo} x={bodyLeft + 8} y="58" width={logoBoxW * 0.7} height={logoBoxW * 0.7}
-                          clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
-                      </>
-                    ) : (
-                      <>
-                        <rect x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
-                        <image href={logo} x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW}
-                          clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
-                      </>
-                    )
-                  ) : (
-                    !skin.image && (
-                      <>
-                        <rect x={logoBoxX} y={95 - logoBoxW / 2} width={logoBoxW} height={logoBoxW} rx="4" fill="#ffffff" opacity="0.9" />
-                        <text x={baseW / 2} y="98" fontSize="9" fill="#999" textAnchor="middle">LOGO</text>
-                      </>
-                    )
-                  )}
-                </svg>
-                <span className="mt-2 text-xs font-semibold text-gray-700">Пакет ({size.label}, {shape.label.toLowerCase()})</span>
-              </div>
-
-              <div className="flex shrink-0 flex-col items-center text-gray-300">
-                <ScaleRefIcon icon={activeRef.icon} />
-                <span className="mt-2 text-xs text-gray-400">{activeRef.name}</span>
-              </div>
-            </div>
-            <p className="mt-4 text-center text-[11px] text-gray-400">
-              Визуализация приблизительная — финальный вид зависит от способа нанесения логотипа и материала
-            </p>
           </div>
         </div>
       )}

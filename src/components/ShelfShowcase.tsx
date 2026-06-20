@@ -3,13 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { isGlossyMaterial } from "@/components/GlossyShine";
 import { formatPrice } from "@/lib/utils";
 
 const SIZE_ORDER = ["S", "M", "L", "XL", "XXL"];
 const SIZE_FULL_LABEL: Record<string, string> = {
   S: "Размер S", M: "Размер M", L: "Размер L", XL: "Размер XL", XXL: "Размер XXL",
 };
+
+const GRID_STEP = 26;
 
 export function ShelfShowcase({ products }: { products: Product[] }) {
   const bySize = new Map<string, Product[]>();
@@ -35,29 +36,41 @@ export function ShelfShowcase({ products }: { products: Product[] }) {
               <span className="text-sm text-gray-400">{items.length} товаров</span>
             </div>
 
-            <div className="rounded-2xl bg-gradient-to-b from-[#FBF4EC] to-[#F3E6D6] p-4 sm:p-5">
-              <div className="flex gap-4 overflow-x-auto pb-2">
+            <div
+              className="relative overflow-hidden rounded-2xl border border-gray-300"
+              style={{
+                backgroundImage: `
+                  linear-gradient(180deg, #E7E9EC 0%, #D7D9DD 100%),
+                  repeating-linear-gradient(0deg, rgba(140,144,150,0.45) 0px, rgba(140,144,150,0.45) 1.5px, transparent 1.5px, transparent ${GRID_STEP}px),
+                  repeating-linear-gradient(90deg, rgba(140,144,150,0.45) 0px, rgba(140,144,150,0.45) 1.5px, transparent 1.5px, transparent ${GRID_STEP}px)
+                `,
+                backgroundBlendMode: "normal, multiply, multiply",
+              }}
+            >
+              <div className="pointer-events-none absolute inset-0 shadow-[inset_0_2px_6px_rgba(0,0,0,0.12),inset_0_-2px_6px_rgba(0,0,0,0.08)]" />
+
+              <div className="relative flex items-start gap-7 overflow-x-auto px-6 pb-6 pt-8">
                 {items.map(p => (
                   <Link key={p.id} href={`/product/${p.slug}`}
-                    className="group flex w-[148px] shrink-0 flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:w-[168px]">
-                    <div className="relative h-[148px] bg-gray-50 sm:h-[168px]">
+                    className="group flex shrink-0 flex-col items-center transition-transform duration-150 hover:translate-y-1">
+                    <div className="relative flex h-5 w-3 flex-col items-center">
+                      <div className="absolute -top-2 h-3 w-3 rounded-t-full border-2 border-b-0 border-gray-400" />
+                      <div className="mt-1 h-4 w-[3px] rounded-b bg-gray-400" />
+                    </div>
+
+                    <div className="relative -mt-0.5 h-28 w-20 rounded-md bg-white shadow-md sm:h-32 sm:w-24">
                       <Image
                         src={p.images[0] || "/products/placeholders/wrap.svg"}
                         alt={p.title}
                         fill
-                        sizes="170px"
-                        className="object-contain p-3 transition-transform duration-200 group-hover:scale-105"
+                        sizes="120px"
+                        className="object-contain p-2"
                       />
-                      {isGlossyMaterial(p.material) && (
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/25 opacity-0 transition group-hover:opacity-100" />
-                      )}
-                      {p.isHit && (
-                        <span className="absolute left-2 top-2 rounded-full bg-gray-900 px-2 py-0.5 text-[10px] font-bold text-white">Хит</span>
-                      )}
                     </div>
-                    <div className="border-t border-gray-100 p-2.5">
-                      <p className="truncate text-xs font-semibold text-gray-900">{p.collection}</p>
-                      <p className="mt-0.5 text-xs font-bold text-orange-600">от {formatPrice(p.basePrice)}</p>
+
+                    <div className="mt-2 max-w-[96px] text-center">
+                      <p className="truncate text-[11px] font-semibold text-gray-800">{p.collection}</p>
+                      <p className="text-[11px] font-bold text-orange-600">от {formatPrice(p.basePrice)}</p>
                     </div>
                   </Link>
                 ))}
