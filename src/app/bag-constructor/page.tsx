@@ -201,14 +201,27 @@ export default function ConstructorPage() {
   const refIndex = size.id === "S" ? 0 : size.id === "M" ? 0 : size.id === "L" ? 1 : size.id === "XL" ? 2 : 3;
   const activeRef = SCALE_REFS[refIndex];
 
-  const baseW = 160 * shape.widthRatio;
-  const baseH = 230;
-  const svgW = baseW * size.scale * 1.5;
+  // Геометрия пакета построена так, чтобы отражать реальные пропорции:
+  // фронтальная грань почти прямоугольная (минимальное сужение книзу),
+  // плюс видимая боковая грань (gusset) справа для ощущения объёма —
+  // как у настоящего бумажного пакета, а не плоской трапеции.
+  const baseW = 150 * shape.widthRatio;   // ширина фронтальной грани
+  const sideW = baseW * 0.22;             // ширина боковой грани (объём)
+  const baseH = 230;                      // высота корпуса
+  const topY = 56;                        // где начинается корпус (под ручками)
+  const bottomY = baseH - 8;
+  const taper = baseW * 0.035;            // едва заметное сужение книзу — у реальных пакетов почти прямые стенки
+
+  const totalW = baseW + sideW;
+  const svgW = totalW * size.scale * 1.5;
   const svgH = baseH * size.scale * 1.5;
-  const bodyLeft = 18 * shape.widthRatio;
-  const bodyRight = baseW - 18 * shape.widthRatio;
-  const logoBoxW = Math.min(46, baseW * 0.3);
-  const logoBoxX = (baseW - logoBoxW) / 2;
+
+  const frontLeft = 4;
+  const frontRight = frontLeft + baseW;
+  const sideRight = frontRight + sideW;
+
+  const logoBoxW = Math.min(44, baseW * 0.32);
+  const logoBoxX = frontLeft + (baseW - logoBoxW) / 2;
 
   return (
     <div className="container py-8">
@@ -229,19 +242,23 @@ export default function ConstructorPage() {
           <div className="order-1 flex min-h-[460px] flex-col items-center justify-center rounded-2xl bg-gray-50 p-8 lg:order-1 lg:min-h-[600px]">
             <div className="flex flex-1 items-center justify-center gap-12">
               <div className="flex flex-col items-center">
-                <svg width={svgW} height={svgH} viewBox={`0 0 ${baseW} ${baseH}`} className="drop-shadow-xl">
+                <svg width={svgW} height={svgH} viewBox={`0 0 ${totalW} ${baseH}`} className="drop-shadow-xl">
                   <defs>
-                    <clipPath id="bagClip">
-                      <path d={`M${bodyLeft} 60 L${bodyRight} 60 L${bodyRight - 9} ${baseH - 10} L${bodyLeft + 9} ${baseH - 10} Z`} />
+                    {/* Контур фронтальной грани — почти прямоугольник с едва заметным сужением книзу */}
+                    <clipPath id="bagClipFront">
+                      <path d={`M${frontLeft} ${topY} L${frontRight} ${topY} L${frontRight - taper} ${bottomY} L${frontLeft + taper} ${bottomY} Z`} />
+                    </clipPath>
+                    <clipPath id="bagClipSide">
+                      <path d={`M${frontRight} ${topY} L${sideRight} ${topY + 4} L${sideRight - taper * 0.6} ${bottomY} L${frontRight - taper} ${bottomY} Z`} />
                     </clipPath>
                     {logo && (
                       <clipPath id="logoClip">
                         {logoPos.id === "corner" ? (
-                          <rect x={bodyLeft + 10} y={70} width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" />
+                          <rect x={frontLeft + 8} y={topY + 10} width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" />
                         ) : logoPos.id === "bottom" ? (
-                          <rect x={logoBoxX} y={baseH - 60} width={logoBoxW} height={logoBoxW} rx="4" />
+                          <rect x={logoBoxX} y={bottomY - 50} width={logoBoxW} height={logoBoxW} rx="4" />
                         ) : (
-                          <rect x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW} rx="4" />
+                          <rect x={logoBoxX} y={baseH * 0.46} width={logoBoxW} height={logoBoxW} rx="4" />
                         )}
                       </clipPath>
                     )}
@@ -252,38 +269,67 @@ export default function ConstructorPage() {
                     </linearGradient>
                   </defs>
 
-                  <path d={`M${bodyLeft} 60 L${bodyRight} 60 L${bodyRight - 9} ${baseH - 10} L${bodyLeft + 9} ${baseH - 10} Z`}
+                  {/* ── Боковая грань (объём) — рисуется первой, чуть темнее фронтальной ── */}
+                  <path d={`M${frontRight} ${topY} L${sideRight} ${topY + 4} L${sideRight - taper * 0.6} ${bottomY} L${frontRight - taper} ${bottomY} Z`}
+                    fill={skin.image ? "#d1d5db" : color.hex}
+                    opacity={skin.image ? 1 : 0.72} />
+                  {skin.image && (
+                    <image href={skin.image} x={frontRight - 14} y={topY - 4} width={sideW + 28} height={bottomY - topY + 8}
+                      clipPath="url(#bagClipSide)" preserveAspectRatio="xMidYMid slice" opacity="0.85" />
+                  )}
+                  <rect x={frontRight} y={topY} width={sideW} height={bottomY - topY} fill="#000" opacity="0.1" clipPath="url(#bagClipSide)" />
+
+                  {/* ── Фронтальная грань ── */}
+                  <path d={`M${frontLeft} ${topY} L${frontRight} ${topY} L${frontRight - taper} ${bottomY} L${frontLeft + taper} ${bottomY} Z`}
                     fill={skin.image ? "#e5e7eb" : color.hex}
                     stroke={color.id === "white" ? "#e5e7eb" : "none"} strokeWidth="1" />
 
                   {skin.image && (
-                    <image href={skin.image} x={bodyLeft - 12} y="52" width={bodyRight - bodyLeft + 24} height={baseH - 70}
-                      clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" />
+                    <image href={skin.image} x={frontLeft - 10} y={topY - 6} width={baseW + 20} height={bottomY - topY + 10}
+                      clipPath="url(#bagClipFront)" preserveAspectRatio="xMidYMid slice" />
                   )}
 
-                  <rect x={bodyLeft} y="60" width={bodyRight - bodyLeft} height="16" fill="#000" opacity="0.12" />
+                  {/* Кант — место сгиба бумаги сверху */}
+                  <rect x={frontLeft} y={topY} width={baseW} height="13" fill="#000" opacity="0.12" clipPath="url(#bagClipFront)" />
+                  <rect x={frontRight} y={topY} width={sideW} height="13" fill="#000" opacity="0.16" clipPath="url(#bagClipSide)" />
+
+                  {/* Линия сгиба между гранями — едва заметная вертикаль, передаёт объём */}
+                  <line x1={frontRight} y1={topY} x2={frontRight - taper} y2={bottomY} stroke="#000" strokeOpacity="0.15" strokeWidth="1" />
 
                   {material.sheen > 0 && (
-                    <rect x={bodyLeft} y="60" width={(bodyRight - bodyLeft) * 0.35} height={baseH - 80}
-                      fill="#fff" opacity={material.sheen} clipPath="url(#bagClip)" />
+                    <rect x={frontLeft} y={topY} width={baseW * 0.32} height={bottomY - topY}
+                      fill="#fff" opacity={material.sheen} clipPath="url(#bagClipFront)" />
                   )}
 
                   {finish.id === "foil" && (
-                    <rect x={bodyLeft} y="60" width={bodyRight - bodyLeft} height={baseH - 80}
-                      fill="url(#foilGrad)" opacity="0.25" clipPath="url(#bagClip)" />
+                    <rect x={frontLeft} y={topY} width={baseW} height={bottomY - topY}
+                      fill="url(#foilGrad)" opacity="0.25" clipPath="url(#bagClipFront)" />
                   )}
 
+                  {/* ── Ручки — две раздельные петли, как у настоящего пакета ── */}
                   {handle.id === "cord" && (
-                    <path d={`M${baseW * 0.32} 60 C${baseW * 0.32} 36 ${baseW * 0.68} 36 ${baseW * 0.68} 60`}
-                      fill="none" stroke={skin.image ? "#92400e" : color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="7" />
+                    <>
+                      <path d={`M${frontLeft + baseW * 0.22} ${topY} C${frontLeft + baseW * 0.18} ${topY - 30} ${frontLeft + baseW * 0.42} ${topY - 30} ${frontLeft + baseW * 0.42} ${topY}`}
+                        fill="none" stroke={skin.image ? "#92400e" : color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="5" strokeLinecap="round" />
+                      <path d={`M${frontLeft + baseW * 0.58} ${topY} C${frontLeft + baseW * 0.58} ${topY - 30} ${frontLeft + baseW * 0.82} ${topY - 30} ${frontLeft + baseW * 0.78} ${topY}`}
+                        fill="none" stroke={skin.image ? "#92400e" : color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="5" strokeLinecap="round" />
+                    </>
                   )}
                   {handle.id === "ribbon" && (
-                    <path d={`M${baseW * 0.32} 60 C${baseW * 0.32} 38 ${baseW * 0.68} 38 ${baseW * 0.68} 60`}
-                      fill="none" stroke="#dc2626" strokeWidth="10" strokeDasharray="2 3" />
+                    <>
+                      <path d={`M${frontLeft + baseW * 0.22} ${topY} C${frontLeft + baseW * 0.2} ${topY - 26} ${frontLeft + baseW * 0.4} ${topY - 26} ${frontLeft + baseW * 0.4} ${topY}`}
+                        fill="none" stroke="#dc2626" strokeWidth="7" />
+                      <path d={`M${frontLeft + baseW * 0.6} ${topY} C${frontLeft + baseW * 0.6} ${topY - 26} ${frontLeft + baseW * 0.8} ${topY - 26} ${frontLeft + baseW * 0.78} ${topY}`}
+                        fill="none" stroke="#dc2626" strokeWidth="7" />
+                    </>
                   )}
                   {handle.id === "flat" && (
-                    <path d={`M${baseW * 0.3} 60 L${baseW * 0.3} 44 L${baseW * 0.7} 44 L${baseW * 0.7} 60`}
-                      fill="none" stroke={color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="8" strokeLinecap="round" />
+                    <>
+                      <path d={`M${frontLeft + baseW * 0.22} ${topY} L${frontLeft + baseW * 0.22} ${topY - 18} L${frontLeft + baseW * 0.4} ${topY - 18} L${frontLeft + baseW * 0.4} ${topY}`}
+                        fill="none" stroke={color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="6" strokeLinecap="round" />
+                      <path d={`M${frontLeft + baseW * 0.6} ${topY} L${frontLeft + baseW * 0.6} ${topY - 18} L${frontLeft + baseW * 0.78} ${topY - 18} L${frontLeft + baseW * 0.78} ${topY}`}
+                        fill="none" stroke={color.id === "white" ? "#9ca3af" : color.hex} strokeWidth="6" strokeLinecap="round" />
+                    </>
                   )}
 
                   {logo ? (
@@ -291,34 +337,34 @@ export default function ConstructorPage() {
                       <>
                         {[0, 1, 2].map(i => (
                           <image key={i} href={logo}
-                            x={bodyLeft + 12 + i * (logoBoxW * 0.55)} y={baseH * 0.32} width={logoBoxW * 0.42} height={logoBoxW * 0.42}
-                            clipPath="url(#bagClip)" preserveAspectRatio="xMidYMid slice" opacity="0.95" />
+                            x={frontLeft + 10 + i * (logoBoxW * 0.5)} y={baseH * 0.36} width={logoBoxW * 0.4} height={logoBoxW * 0.4}
+                            clipPath="url(#bagClipFront)" preserveAspectRatio="xMidYMid slice" opacity="0.95" />
                         ))}
                       </>
                     ) : logoPos.id === "corner" ? (
                       <>
-                        <rect x={bodyLeft + 10} y="70" width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" fill="#fff" opacity="0.92" />
-                        <image href={logo} x={bodyLeft + 10} y="70" width={logoBoxW * 0.7} height={logoBoxW * 0.7}
+                        <rect x={frontLeft + 8} y={topY + 10} width={logoBoxW * 0.7} height={logoBoxW * 0.7} rx="3" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={frontLeft + 8} y={topY + 10} width={logoBoxW * 0.7} height={logoBoxW * 0.7}
                           clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
                       </>
                     ) : logoPos.id === "bottom" ? (
                       <>
-                        <rect x={logoBoxX} y={baseH - 60} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
-                        <image href={logo} x={logoBoxX} y={baseH - 60} width={logoBoxW} height={logoBoxW}
+                        <rect x={logoBoxX} y={bottomY - 50} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={logoBoxX} y={bottomY - 50} width={logoBoxW} height={logoBoxW}
                           clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
                       </>
                     ) : (
                       <>
-                        <rect x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
-                        <image href={logo} x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW}
+                        <rect x={logoBoxX} y={baseH * 0.46} width={logoBoxW} height={logoBoxW} rx="4" fill="#fff" opacity="0.92" />
+                        <image href={logo} x={logoBoxX} y={baseH * 0.46} width={logoBoxW} height={logoBoxW}
                           clipPath="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
                       </>
                     )
                   ) : (
                     !skin.image && (
                       <>
-                        <rect x={logoBoxX} y={baseH * 0.42} width={logoBoxW} height={logoBoxW} rx="4" fill="#ffffff" opacity="0.9" />
-                        <text x={baseW / 2} y={baseH * 0.42 + logoBoxW / 2 + 3} fontSize="10" fill="#999" textAnchor="middle">LOGO</text>
+                        <rect x={logoBoxX} y={baseH * 0.46} width={logoBoxW} height={logoBoxW} rx="4" fill="#ffffff" opacity="0.9" />
+                        <text x={frontLeft + baseW / 2} y={baseH * 0.46 + logoBoxW / 2 + 3} fontSize="10" fill="#999" textAnchor="middle">LOGO</text>
                       </>
                     )
                   )}
