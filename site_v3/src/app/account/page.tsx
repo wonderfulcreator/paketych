@@ -52,7 +52,7 @@ const DELIVERY_STAGES = [
   { id: "delivered",  label: "Доставлен" },
 ];
 
-export default function AccountInner() {
+function AccountInner() {
   const router = useRouter();
   const sp = useSearchParams();
   const { user, ready, logout } = useAuth();
