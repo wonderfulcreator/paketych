@@ -81,10 +81,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
         <Link href={`/product/${product.slug}`}
           className="relative block overflow-hidden bg-gray-50" style={{ aspectRatio: "1/1" }}>
           <Image src={img} alt={product.title} fill
-            priority={index < 8}
             sizes="(max-width:768px) 50vw, 25vw"
-            placeholder="blur"
-            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y5ZmFmYiIvPjwvc3ZnPg=="
             className="object-contain p-4 transition-all duration-500 ease-[cubic-bezier(.34,1.56,.64,1)] group-hover:scale-105 group-hover:-translate-y-1 group-hover:-rotate-2"
           />
 
