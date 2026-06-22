@@ -46,6 +46,10 @@ function RegisterInner() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
+  function set(k: string, v: string) {
+    setForm((f) => ({ ...f, [k]: v }));
+  }
+
   function touch(k: string) {
     setTouched(t => ({ ...t, [k]: true }));
     validateField(k, form[k as keyof typeof form]);
